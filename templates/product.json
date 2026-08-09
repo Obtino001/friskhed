@@ -170,6 +170,18 @@
               },
               "blocks": {}
             },
+            "mix_pack_pdp": {
+              "type": "_mix-pack-offer",
+              "name": "Mix pack offer",
+              "settings": {},
+              "blocks": {}
+            },
+            "strength_guide_pdp": {
+              "type": "_strength-guide",
+              "name": "Menthol strength guide",
+              "settings": {},
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -183,6 +195,19 @@
               },
               "blocks": {}
             },
+            "pdp_quotes_pdp": {
+              "type": "_pdp-review-quotes",
+              "name": "PDP review quotes",
+              "settings": {
+                "author_1": "Jan",
+                "quote_1": "Som sædvanlig hurtig levering, kan kun anbefale Friskhed",
+                "author_2": "Inge Nielsen",
+                "quote_2": "Fantastisk produkt. Endnu mere fantastisk service og lynhurtig levering",
+                "author_3": "Camilla",
+                "quote_3": "Altid hurtig modtagelse af vare. Og super kundeservice"
+              },
+              "blocks": {}
+            },
             "shipping_7bHfGn": {
               "type": "_shipping",
               "name": "Shipping & Delivery",
@@ -191,8 +216,8 @@
                 "text": "På lager · Levering 1–3 hverdage",
                 "text_color": "#13a877",
                 "size": 12,
-                "padding_top": 0,
-                "padding_bottom": 0,
+                "padding_top": 15,
+                "padding_bottom": 13,
                 "padding_left": 5,
                 "padding_right": 0
               },
@@ -405,12 +430,6 @@
               "settings": {},
               "blocks": {}
             },
-            "pdp_upsell_pdp": {
-              "type": "_pdp-upsell",
-              "name": "PDP complete order",
-              "settings": {},
-              "blocks": {}
-            },
             "pdp_quotes_pdp": {
               "type": "_pdp-review-quotes",
               "name": "PDP review quotes",
@@ -436,9 +455,7 @@
             "variant_picker_R3rGDr",
             "pdp_quotes_pdp",
             "shipping_7bHfGn",
-            "payment_icons_4GPxAT",
             "buy_buttons_eYQEYi",
-            "pdp_upsell_pdp",
             "accordion_FYWXJn"
           ]
         }
