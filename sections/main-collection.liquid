@@ -65,18 +65,6 @@
             data-available="{% if product.available %}true{% else %}false{% endif %}"
             ref="cards[]"
           >
-            <label class="mix-pick-toggle">
-              <input
-                type="checkbox"
-                class="mix-pick-toggle__input"
-                data-mix-select
-                {% unless product.available %}
-                  disabled
-                {% endunless %}
-              >
-              <span class="mix-pick-toggle__mark"></span>
-              <span class="visually-hidden">Vælg {{ product.title }}</span>
-            </label>
             {% # theme-check-disable %}
             {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
             {% # theme-check-enable %}

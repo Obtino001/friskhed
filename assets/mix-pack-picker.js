@@ -1,18 +1,20 @@
 import { CartAddEvent } from '@theme/events';
 
 class MixPackPicker extends HTMLElement {
-  /** @type {Map<string, { id: string, title: string, image: string }>} */
+  /** @type {Map<string, { id: string, title: string }>} */
   #selected = new Map();
+  #qty3 = 3;
+  #qty5 = 5;
+  #price3 = '49';
+  #price5 = '75';
+  #target = 3;
 
   connectedCallback() {
-    const scentHandle = this.dataset.scentCollection || '';
-    const collectionHandle = this.dataset.collection || '';
     const params = new URLSearchParams(window.location.search);
     const mix = params.get('mix') || '';
+    if (!mix) return;
 
-    const onScentCollection = scentHandle && collectionHandle === scentHandle;
-    if (!onScentCollection && !mix) return;
-
+    document.body.appendChild(this);
     this.hidden = false;
     document.body.dataset.mixPicker = 'on';
 
@@ -20,9 +22,7 @@ class MixPackPicker extends HTMLElement {
     this.#qty5 = Number(this.dataset.qty5) || 5;
     this.#price3 = this.dataset.price3 || '49';
     this.#price5 = this.dataset.price5 || '75';
-
-    if (mix === '5') this.#target = this.#qty5;
-    else this.#target = this.#qty3;
+    this.#target = mix === '5' ? this.#qty5 : this.#qty3;
 
     if (mix === 'starter') {
       this.#target = this.#qty3;
@@ -37,13 +37,8 @@ class MixPackPicker extends HTMLElement {
 
   disconnectedCallback() {
     document.body.removeAttribute('data-mix-picker');
+    document.removeEventListener('click', this.#onGridClick, true);
   }
-
-  #qty3 = 3;
-  #qty5 = 5;
-  #price3 = '49';
-  #price5 = '75';
-  #target = 3;
 
   #bind() {
     this.querySelectorAll('[data-mix-target]').forEach((input) => {
@@ -60,17 +55,17 @@ class MixPackPicker extends HTMLElement {
     });
 
     this.querySelector('[data-mix-submit]')?.addEventListener('click', () => this.#submit());
-
     document.addEventListener('click', this.#onGridClick, true);
-    document.addEventListener('change', this.#onCheckChange, true);
   }
 
   /** @param {MouseEvent} event */
   #onGridClick = (event) => {
     if (document.body.dataset.mixPicker !== 'on') return;
-    const item = event.target instanceof Element ? event.target.closest('.product-grid__item') : null;
+    if (!(event.target instanceof Element)) return;
+    if (event.target.closest('mix-pack-picker, .mix-pick')) return;
+
+    const item = event.target.closest('.product-grid__item');
     if (!item) return;
-    if (event.target instanceof Element && event.target.closest('.mix-pick-toggle, [data-mix-select]')) return;
 
     const variantId = item.getAttribute('data-variant-id');
     if (!variantId || item.getAttribute('data-available') === 'false') return;
@@ -78,17 +73,6 @@ class MixPackPicker extends HTMLElement {
     event.preventDefault();
     event.stopPropagation();
     this.#toggle(item);
-  };
-
-  /** @param {Event} event */
-  #onCheckChange = (event) => {
-    const input = event.target;
-    if (!(input instanceof HTMLInputElement) || !input.matches('[data-mix-select]')) return;
-    const item = input.closest('.product-grid__item');
-    if (!item) return;
-    if (input.checked) this.#select(item);
-    else this.#deselect(item.getAttribute('data-variant-id') || '');
-    this.#render();
   };
 
   /** @param {Element} item */
@@ -103,25 +87,16 @@ class MixPackPicker extends HTMLElement {
   #select(item) {
     const id = item.getAttribute('data-variant-id') || '';
     if (!id || item.getAttribute('data-available') === 'false') return;
-    if (this.#selected.has(id)) return;
-    if (this.#selected.size >= this.#target) return;
-    this.#selected.set(id, {
-      id,
-      title: item.getAttribute('data-product-title') || '',
-      image: item.getAttribute('data-product-image') || '',
-    });
+    if (this.#selected.has(id) || this.#selected.size >= this.#target) return;
+    this.#selected.set(id, { id, title: item.getAttribute('data-product-title') || '' });
     item.classList.add('is-mix-selected');
-    const check = item.querySelector('[data-mix-select]');
-    if (check instanceof HTMLInputElement) check.checked = true;
   }
 
   /** @param {string} id */
   #deselect(id) {
     this.#selected.delete(id);
-    document.querySelectorAll(`.product-grid__item[data-variant-id="${id}"]`).forEach((item) => {
+    document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"]`).forEach((item) => {
       item.classList.remove('is-mix-selected');
-      const check = item.querySelector('[data-mix-select]');
-      if (check instanceof HTMLInputElement) check.checked = false;
     });
   }
 
@@ -155,34 +130,22 @@ class MixPackPicker extends HTMLElement {
     const targetEl = this.querySelector('[data-mix-target-label]');
     const status = this.querySelector('[data-mix-status]');
     const submit = this.querySelector('[data-mix-submit]');
-    const chips = this.querySelector('[data-mix-chips]');
     const appTypes = this.querySelector('[data-mix-app-types]');
     const appOn = this.querySelector('[data-mix-app]');
+    const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
 
     if (countEl) countEl.textContent = String(count);
     if (targetEl) targetEl.textContent = String(this.#target);
-    if (status instanceof HTMLElement) {
+    if (status) {
       status.textContent =
-        count >= this.#target
-          ? 'Klar til kurv'
-          : `Vælg ${this.#target - count} mere`;
+        count >= this.#target ? 'Klar — læg i kurv' : `Klik på ${this.#target - count} scent${this.#target - count === 1 ? '' : 's'} mere`;
     }
     if (submit instanceof HTMLButtonElement) {
       submit.disabled = count < this.#target;
-      const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
-      submit.textContent = `Læg ${this.#target} i kurv · ${price} kr`;
+      submit.textContent = `Læg i kurv · ${price} kr`;
     }
     if (appTypes instanceof HTMLElement && appOn instanceof HTMLInputElement) {
       appTypes.hidden = !appOn.checked;
-    }
-    if (chips) {
-      chips.innerHTML = '';
-      this.#selected.forEach((item) => {
-        const chip = document.createElement('span');
-        chip.className = 'mix-pick__chip';
-        chip.textContent = item.title;
-        chips.appendChild(chip);
-      });
     }
 
     document.querySelectorAll('.product-grid__item[data-variant-id]').forEach((item) => {
@@ -196,7 +159,6 @@ class MixPackPicker extends HTMLElement {
     const submit = this.querySelector('[data-mix-submit]');
     if (submit instanceof HTMLButtonElement) submit.disabled = true;
 
-    /** @type {{ id: number, quantity: number }[]} */
     const items = [...this.#selected.keys()].map((id) => ({ id: Number(id), quantity: 1 }));
     const appId = this.#appVariantId();
     if (appId) items.push({ id: Number(appId), quantity: 1 });
@@ -216,10 +178,7 @@ class MixPackPicker extends HTMLElement {
           Accept: 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
         },
-        body: JSON.stringify({
-          items,
-          sections: sectionIds.join(','),
-        }),
+        body: JSON.stringify({ items, sections: sectionIds.join(',') }),
       });
       const data = await response.json();
       if (data.status) {
