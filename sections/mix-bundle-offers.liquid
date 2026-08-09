@@ -1,0 +1,254 @@
+{%- style -%}
+  .mix-offers-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .mix-offers-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="mix-offers mix-offers-{{ section.id }}">
+  <div class="mix-offers__header">
+    {% if section.settings.heading != blank %}
+      <h2 class="mix-offers__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p class="mix-offers__subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+  </div>
+
+  <div class="mix-offers__grid">
+    {%- for block in section.blocks -%}
+      <article class="mix-offers__card{% if block.settings.featured %} is-featured{% endif %}" {{ block.shopify_attributes }}>
+        {% if block.settings.badge != blank %}
+          <span class="mix-offers__badge">{{ block.settings.badge }}</span>
+        {% endif %}
+        <h3 class="mix-offers__title">{{ block.settings.title }}</h3>
+        {% if block.settings.price != blank %}
+          <p class="mix-offers__price">{{ block.settings.price }}</p>
+        {% endif %}
+        {% if block.settings.text != blank %}
+          <p class="mix-offers__text">{{ block.settings.text }}</p>
+        {% endif %}
+        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+          <a class="mix-offers__button" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+        {% endif %}
+      </article>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .mix-offers__header {
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .mix-offers__heading {
+    margin: 0 0 8px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .mix-offers__subheading {
+    margin: 0 auto;
+    max-width: 40rem;
+    color: var(--color-foreground-muted, #555);
+  }
+
+  .mix-offers__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .mix-offers__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .mix-offers__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 100%;
+    padding: 24px;
+    border-radius: 16px;
+    background: #f5f5f7;
+    border: 1px solid transparent;
+  }
+
+  .mix-offers__card.is-featured {
+    background: #121212;
+    color: #fff;
+  }
+
+  .mix-offers__badge {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #13a877;
+    color: #fff;
+  }
+
+  .mix-offers__card.is-featured .mix-offers__badge {
+    background: #13a877;
+  }
+
+  .mix-offers__title {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .mix-offers__price {
+    margin: 0 0 8px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .mix-offers__text {
+    margin: 0 0 20px;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: inherit;
+    opacity: 0.8;
+  }
+
+  .mix-offers__button {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: 1px solid #121212;
+    background: transparent;
+    color: #121212;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .mix-offers__card.is-featured .mix-offers__button {
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .mix-offers__button:hover {
+    background: #121212;
+    color: #fff;
+  }
+
+  .mix-offers__card.is-featured .mix-offers__button:hover {
+    background: #fff;
+    color: #121212;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Mix bundle offers",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Mix dine favoritter"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Saml dine scents og spar. Gratis fragt over 149 kr."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer",
+      "settings": [
+        { "type": "text", "id": "badge", "label": "Badge" },
+        { "type": "text", "id": "title", "label": "Title", "default": "3-pack" },
+        { "type": "text", "id": "price", "label": "Price", "default": "49 kr" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Mix 3 aroma-kugler" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Vælg scents" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "checkbox", "id": "featured", "label": "Featured (dark card)", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mix bundle offers",
+      "blocks": [
+        {
+          "type": "offer",
+          "settings": {
+            "badge": "Mest populær",
+            "title": "3-pack",
+            "price": "49 kr",
+            "text": "Mix 3 aroma-kugler. Automatisk rabat i kurven.",
+            "button_label": "Vælg 3 scents",
+            "featured": true
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "title": "5-pack",
+            "price": "75 kr",
+            "text": "Mix 5 aroma-kugler og spar mere.",
+            "button_label": "Vælg 5 scents"
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "title": "Starter kit",
+            "price": "Kugler + applikator",
+            "text": "Aroma-kugler plus dispenser — klar til brug.",
+            "button_label": "Se applikator"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -4,6 +4,22 @@
   assign cart_product_ids = cart.items | map: 'product_id'
   assign show_applicator = false
   assign upsell_product = nil
+  assign qty_3 = settings.mix_pack_3_qty | default: 3
+  assign qty_5 = settings.mix_pack_5_qty | default: 5
+  assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
+  assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
+  assign upsell_heading = 'Gør ordren komplet'
+-%}
+{%- capture mix_pack_qty -%}{% render 'mix-pack-count' %}{%- endcapture -%}
+{%- liquid
+  assign mix_pack_qty = mix_pack_qty | plus: 0
+  assign price_3_label = price_3 | money_without_trailing_zeros
+  assign price_5_label = price_5 | money_without_trailing_zeros
+  if settings.mix_pack_enable and mix_pack_qty > 0 and mix_pack_qty < qty_3
+    assign upsell_heading = 'Mix ' | append: qty_3 | append: ' stk for ' | append: price_3_label
+  elsif settings.mix_pack_enable and mix_pack_qty >= qty_3 and mix_pack_qty < qty_5
+    assign upsell_heading = 'Mix ' | append: qty_5 | append: ' stk for ' | append: price_5_label
+  endif
 
   if applicator != blank
     unless cart_product_ids contains applicator.id
@@ -29,7 +45,7 @@
 
 {% if show_applicator or upsell_product %}
   <cart-upsell class="cart-upsell">
-    <p class="cart-upsell__heading">Gør ordren komplet</p>
+    <p class="cart-upsell__heading">{{ upsell_heading }}</p>
 
     {% if show_applicator %}
       {% render 'cart-upsell-item', product: applicator, section: section %}

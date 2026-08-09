@@ -1,0 +1,66 @@
+{%- if settings.mix_pack_enable -%}
+  {%- liquid
+    assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
+    assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
+    assign qty_3 = settings.mix_pack_3_qty | default: 3
+    assign qty_5 = settings.mix_pack_5_qty | default: 5
+    assign scent_url = settings.cart_upsell_scents.url
+  -%}
+  <div class="mix-pack-offer" {{ block.shopify_attributes }}>
+    <p class="mix-pack-offer__text">
+      Mix dine favoritter · {{ qty_3 }} stk {{ price_3 | money_without_trailing_zeros }} · {{ qty_5 }} stk {{ price_5 | money_without_trailing_zeros }}
+    </p>
+    {%- if scent_url != blank -%}
+      <a class="mix-pack-offer__link" href="{{ scent_url }}">Se alle scents</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .mix-pack-offer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+    width: 100%;
+    margin: 4px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f3faf7;
+  }
+
+  .mix-pack-offer__text {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .mix-pack-offer__link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #13a877;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Mix pack offer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows 3-pack / 5-pack prices from Theme settings. Create matching automatic discounts in Shopify admin."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mix pack offer"
+    }
+  ]
+}
+{% endschema %}

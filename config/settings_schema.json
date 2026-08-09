@@ -146,8 +146,43 @@
         "info": "Use aroma-kugler so the cart suggests another scent."
       },
       {
+        "type": "header",
+        "content": "Mix packs"
+      },
+      {
+        "type": "checkbox",
+        "id": "mix_pack_enable",
+        "label": "Show mix-pack offers",
+        "default": true,
+        "info": "Theme shows 3/5-pack prices. Discounts only apply after you create automatic discounts in Shopify admin."
+      },
+      {
+        "type": "number",
+        "id": "mix_pack_3_qty",
+        "label": "3-pack quantity",
+        "default": 3
+      },
+      {
+        "type": "text",
+        "id": "mix_pack_3_price",
+        "label": "3-pack total (DKK)",
+        "default": "49"
+      },
+      {
+        "type": "number",
+        "id": "mix_pack_5_qty",
+        "label": "5-pack quantity",
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "mix_pack_5_price",
+        "label": "5-pack total (DKK)",
+        "default": "75"
+      },
+      {
         "type": "paragraph",
-        "content": "Shopify admin still required: (1) Shipping rates free from 149 DKK not 450. (2) Create 3-pack 49 DKK, 5-pack 75 DKK, starter kit aroma+applicator. (3) Metafield custom.menthol_strength 1–5 on aroma products. (4) Automatic 10% discount for the welcome popup. (5) Preview this unpublished theme before going live."
+        "content": "Shopify admin still required: (1) Settings → Shipping: free from 149 DKK not 450. (2) Discounts → Automatic: Buy X get Y — 3 from aroma-kugler = 49 DKK, 5 = 75 DKK, plus starter kit aroma+applicator. (3) Metafield custom.menthol_strength 1–5. (4) Automatic 10% for welcome popup. (5) Preview unpublished theme before live."
       },
       {
         "type": "header",

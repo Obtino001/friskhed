@@ -353,6 +353,10 @@
         </table>
       </div>
     </form>
+    {% unless drawer_context == 'drawer' %}
+      {% render 'mix-pack-nudge' %}
+      {% render 'cart-upsell' %}
+    {% endunless %}
   {%- endif -%}
 </div>
 

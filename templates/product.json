@@ -399,6 +399,12 @@
               "settings": {},
               "blocks": {}
             },
+            "mix_pack_pdp": {
+              "type": "_mix-pack-offer",
+              "name": "Mix pack offer",
+              "settings": {},
+              "blocks": {}
+            },
             "pdp_quotes_pdp": {
               "type": "_pdp-review-quotes",
               "name": "PDP review quotes",
@@ -419,6 +425,7 @@
             "price_PJVP3x",
             "discount_badge_MCaqmm",
             "sales_points_TKgmh7",
+            "mix_pack_pdp",
             "strength_guide_pdp",
             "variant_picker_R3rGDr",
             "pdp_quotes_pdp",
