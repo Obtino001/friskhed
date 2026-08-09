@@ -1,10 +1,72 @@
-<div class="stock-info-wrapper {% if block.settings.enable_pay %}payment__icon__active{% endif %}" style="--dot-color:{{ block.settings.dot_color }};--text-color:{{ block.settings.text_color }};--text--size:{{ block.settings.size }}px;">
+{%- liquid
+  assign product = product
+  if closest.product != blank
+    assign product = closest.product
+  endif
+  assign variant = product.selected_or_first_available_variant
+  assign in_stock = false
+  if product != blank and product.available
+    assign in_stock = true
+  endif
+
+  assign cutoff_hour = settings.dispatch_cutoff_hour | default: 15
+  assign show_cutoff = settings.show_dispatch_cutoff
+  assign before_text = settings.dispatch_before_cutoff_text | default: 'Bestil før 15:00, sendes i dag'
+  assign after_text = settings.dispatch_after_cutoff_text | default: 'På lager · Levering 1–3 hverdage'
+  assign custom_text = block.settings.text
+  assign free_min = settings.free_shipping_minimum | default: '149'
+-%}
+
+<div
+  class="stock-info-wrapper buy-box-reassurance {% if block.settings.enable_pay %}payment__icon__active{% endif %}"
+  style="--dot-color:{{ block.settings.dot_color }};--text-color:{{ block.settings.text_color }};--text--size:{{ block.settings.size }}px;"
+  data-cutoff-hour="{{ cutoff_hour }}"
+  data-before-text="{{ before_text | escape }}"
+  data-after-text="{{ after_text | escape }}"
+  {% if show_cutoff %}data-use-cutoff="true"{% endif %}
+>
+  {% if in_stock %}
     <div class="stock-box">
-        <div class="status-dot"></div>
-        {% if block.settings.text != '' %}
-            <div class="status-text">
-                {{ block.settings.text }}
-            </div>
+      <div class="status-dot"></div>
+      <div class="status-text" data-dispatch-text>
+        {% if custom_text != blank and show_cutoff == false %}
+          {{ custom_text }}
+        {% else %}
+          {{ after_text }}
         {% endif %}
+      </div>
     </div>
+  {% else %}
+    <div class="stock-box stock-box--out">
+      <div class="status-dot"></div>
+      <div class="status-text">Udsolgt</div>
+    </div>
+  {% endif %}
+
+  {% if settings.free_shipping and free_min != blank %}
+    <div class="buy-box-reassurance__shipping">
+      Gratis fragt over {{ free_min }} kr
+    </div>
+  {% endif %}
 </div>
+
+{% if show_cutoff and in_stock %}
+  <script>
+    (function () {
+      var wrap = document.currentScript && document.currentScript.previousElementSibling;
+      if (!wrap || wrap.getAttribute('data-use-cutoff') !== 'true') return;
+      var textEl = wrap.querySelector('[data-dispatch-text]');
+      if (!textEl) return;
+      var hour = parseInt(wrap.getAttribute('data-cutoff-hour') || '15', 10);
+      var before = wrap.getAttribute('data-before-text') || '';
+      var after = wrap.getAttribute('data-after-text') || '';
+      try {
+        var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Copenhagen' }));
+        var isWeekday = now.getDay() >= 1 && now.getDay() <= 5;
+        textEl.textContent = isWeekday && now.getHours() < hour ? before : after;
+      } catch (e) {
+        textEl.textContent = after;
+      }
+    })();
+  </script>
+{% endif %}

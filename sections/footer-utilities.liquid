@@ -11,6 +11,9 @@
     data-testid="footer-utilities"
   >
     {% content_for 'blocks' %}
+    <div class="footer-legal-identity">
+      {% render 'company-identity', compact: true %}
+    </div>
   </div>
 </div>
 
@@ -24,6 +27,14 @@
     text-wrap: nowrap;
     border-top: var(--border-width) solid var(--color-border);
     color: var(--color-foreground-muted);
+
+    .footer-legal-identity {
+      grid-column: 1 / -1;
+      text-align: left;
+      justify-self: start;
+      width: 100%;
+      padding-top: 8px;
+    }
 
     @media screen and (min-width: 750px) {
       display: grid;
@@ -178,6 +189,9 @@
         {
       "type": "payment-icons"
     },
+    {
+      "type": "_company-identity"
+    }
   ],
   "presets": [
     {

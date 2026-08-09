@@ -216,12 +216,16 @@
             </span>
           {%- endunless -%}
 
-          {% content_for 'block',
-            type: 'add-to-cart',
-            id: 'add-to-cart',
-            can_add_to_cart: can_add_to_cart,
-            add_to_cart_text: add_to_cart_text
-          %}
+          {% if can_add_to_cart %}
+            {% content_for 'block',
+              type: 'add-to-cart',
+              id: 'add-to-cart',
+              can_add_to_cart: can_add_to_cart,
+              add_to_cart_text: add_to_cart_text
+            %}
+          {% else %}
+            <p class="product-form-sold-out" role="status">{{ add_to_cart_text }}</p>
+          {% endif %}
 
           {% content_for 'block',
             type: 'accelerated-checkout',
@@ -450,6 +454,16 @@
   .add-to-cart-button {
     height: var(--height-buy-buttons);
     text-transform: var(--button-text-case-primary);
+  }
+
+  .product-form-sold-out {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #f4f4f4;
+    font-weight: 600;
   }
 
   .add-to-cart-button.button-secondary {

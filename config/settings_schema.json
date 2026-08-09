@@ -8,6 +8,155 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Friskhed trust & identity",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Legal company identity"
+      },
+      {
+        "type": "text",
+        "id": "company_legal_name",
+        "label": "Company name",
+        "default": "Friskhed.dk ApS"
+      },
+      {
+        "type": "text",
+        "id": "company_cvr",
+        "label": "CVR number",
+        "default": "43519379"
+      },
+      {
+        "type": "textarea",
+        "id": "company_address",
+        "label": "Official address",
+        "default": "Lunikvej 20b, 2670 Greve"
+      },
+      {
+        "type": "text",
+        "id": "company_email",
+        "label": "Official email",
+        "default": "kontakt@friskhed.dk",
+        "info": "Never use a Gmail address. Danish e-commerce law requires the official company email."
+      },
+      {
+        "type": "text",
+        "id": "company_phone",
+        "label": "Phone (optional)",
+        "info": "Leave blank if the number is not for customer support."
+      },
+      {
+        "type": "header",
+        "content": "Trustpilot"
+      },
+      {
+        "type": "text",
+        "id": "trustpilot_rating",
+        "label": "Rating",
+        "default": "4,9"
+      },
+      {
+        "type": "text",
+        "id": "trustpilot_review_count",
+        "label": "Review count",
+        "default": "469"
+      },
+      {
+        "type": "url",
+        "id": "trustpilot_url",
+        "label": "Trustpilot URL"
+      },
+      {
+        "type": "header",
+        "content": "Delivery promise"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_dispatch_cutoff",
+        "label": "Use same-day cutoff promise",
+        "default": true,
+        "info": "Only enable if orders before the cutoff actually ship the same weekday."
+      },
+      {
+        "type": "number",
+        "id": "dispatch_cutoff_hour",
+        "label": "Cutoff hour (24h, Denmark time)",
+        "default": 15
+      },
+      {
+        "type": "text",
+        "id": "dispatch_before_cutoff_text",
+        "label": "Text before cutoff",
+        "default": "Bestil før 15:00, sendes i dag"
+      },
+      {
+        "type": "text",
+        "id": "dispatch_after_cutoff_text",
+        "label": "Text after cutoff / fallback",
+        "default": "På lager · Levering 1–3 hverdage"
+      },
+      {
+        "type": "header",
+        "content": "Welcome popup"
+      },
+      {
+        "type": "checkbox",
+        "id": "welcome_popup_enable",
+        "label": "Show 10% welcome popup",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "welcome_popup_heading",
+        "label": "Popup heading",
+        "default": "Få 10% på din første ordre"
+      },
+      {
+        "type": "textarea",
+        "id": "welcome_popup_text",
+        "label": "Popup text",
+        "default": "Tilmeld dig nyhedsbrevet og få 10% rabat. Vi sender kun relevante tilbud og nyheder."
+      },
+      {
+        "type": "text",
+        "id": "welcome_popup_button",
+        "label": "Button label",
+        "default": "Få 10% rabat"
+      },
+      {
+        "type": "number",
+        "id": "welcome_popup_delay",
+        "label": "Delay (seconds)",
+        "default": 5
+      },
+      {
+        "type": "header",
+        "content": "Cart cross-sells"
+      },
+      {
+        "type": "product",
+        "id": "cart_upsell_applicator",
+        "label": "Applicator product"
+      },
+      {
+        "type": "collection",
+        "id": "cart_upsell_scents",
+        "label": "Scent mix collection",
+        "info": "Used to suggest another aroma product in the cart drawer."
+      },
+      {
+        "type": "header",
+        "content": "Product card noise"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_fast_selling_badge",
+        "label": "Show Fast Selling badges",
+        "default": false
+      }
+    ]
+  },
+  {
     "name": "t:names.logo_and_favicon",
     "settings": [
       {
@@ -1901,27 +2050,27 @@
         "type": "checkbox",
         "id": "free_shipping",
         "label": "Show free shipping message",
-        "default": false
+        "default": true
       },
       {
         "type": "text",
         "id": "free_shipping_minimum",
         "label": "Free shipping minimum amount",
-        "default": "250",
-        "info": "Enter the value without a currency symbol and use a decimal to separate dollars and cents. Example: '100.00'"
+        "default": "149",
+        "info": "Must match Shopify shipping settings. Recommended: 149 so a 5-pack + extras can unlock free shipping."
       },
       {
         "type": "text",
         "id": "free_shipping_not_met",
         "label": "Free shipping remaining text",
         "info": "Add 'amount' text to show the remaining amount",
-        "default": "Spend <strong>amount</strong> more for free shipping"
+        "default": "Køb for <strong>amount</strong> mere og få gratis fragt"
       },
       {
         "type": "text",
         "id": "free_shipping_met",
         "label": "Free shipping unlocked text",
-        "default": "You have unlocked free shipping!"
+        "default": "Du har låst op for gratis fragt!"
       },
       // {
       //   "type": "text",

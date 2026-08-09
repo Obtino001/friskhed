@@ -1,0 +1,11 @@
+{%- doc -%}
+  Single factual Trustpilot claim used everywhere.
+  Output: 4,9 på Trustpilot · 469 anmeldelser
+{%- enddoc -%}
+
+{%- liquid
+  assign rating = settings.trustpilot_rating | default: '4,9'
+  assign count = settings.trustpilot_review_count | default: '469'
+  assign claim = rating | append: ' på Trustpilot · ' | append: count | append: ' anmeldelser'
+-%}
+{{- claim -}}

@@ -1,0 +1,59 @@
+{%- doc -%}
+  Official Danish e-commerce identity. Always uses theme settings.
+{%- enddoc -%}
+
+{%- liquid
+  assign legal_name = settings.company_legal_name | default: 'Friskhed.dk ApS'
+  assign cvr = settings.company_cvr | default: '43519379'
+  assign address = settings.company_address | default: 'Lunikvej 20b, 2670 Greve'
+  assign email = settings.company_email | default: 'kontakt@friskhed.dk'
+  assign phone = settings.company_phone
+  assign compact = compact | default: false
+-%}
+
+<div class="company-identity{% if compact %} company-identity--compact{% endif %}">
+  <p class="company-identity__name">{{ legal_name }}</p>
+  {% if cvr != blank %}
+    <p class="company-identity__line">CVR: {{ cvr }}</p>
+  {% endif %}
+  {% if address != blank %}
+    <p class="company-identity__line">{{ address }}</p>
+  {% endif %}
+  {% if email != blank %}
+    <p class="company-identity__line">
+      <a href="mailto:{{ email }}">{{ email }}</a>
+    </p>
+  {% endif %}
+  {% if phone != blank %}
+    <p class="company-identity__line">
+      <a href="tel:{{ phone | replace: ' ', '' }}">{{ phone }}</a>
+    </p>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .company-identity {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-foreground-muted, inherit);
+  }
+
+  .company-identity p {
+    margin: 0;
+  }
+
+  .company-identity__name {
+    font-weight: 600;
+    color: var(--color-foreground, inherit);
+  }
+
+  .company-identity a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .company-identity--compact {
+    font-size: 0.75rem;
+  }
+{% endstylesheet %}

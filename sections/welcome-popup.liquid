@@ -1,0 +1,139 @@
+{%- if settings.welcome_popup_enable -%}
+  <dialog-component id="WelcomePopup" class="welcome-popup">
+    <dialog class="welcome-popup__dialog dialog-modal color-scheme-1" ref="dialog" aria-labelledby="welcome-popup-heading">
+      <button
+        type="button"
+        class="button button-unstyled welcome-popup__close"
+        on:click="/closeDialog"
+        aria-label="Luk"
+      >
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </button>
+      <h2 id="welcome-popup-heading" class="welcome-popup__heading">
+        {{ settings.welcome_popup_heading | default: 'Få 10% på din første ordre' }}
+      </h2>
+      <p class="welcome-popup__text">
+        {{ settings.welcome_popup_text | default: 'Tilmeld dig nyhedsbrevet og få 10% rabat.' }}
+      </p>
+      {% form 'customer', class: 'welcome-popup__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter,welcome-popup">
+        <label class="visually-hidden" for="WelcomePopup-email">E-mail</label>
+        <input
+          id="WelcomePopup-email"
+          type="email"
+          name="contact[email]"
+          placeholder="Din e-mail"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="button">
+          {{ settings.welcome_popup_button | default: 'Få 10% rabat' }}
+        </button>
+        {% if form.posted_successfully? %}
+          <p class="welcome-popup__success">Tak! Tjek din indbakke for rabatkoden.</p>
+        {% endif %}
+        {{ form.errors | default_errors }}
+      {% endform %}
+    </dialog>
+  </dialog-component>
+
+  <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+  <script>
+    (function () {
+      var key = 'friskhed-welcome-popup';
+      try {
+        if (localStorage.getItem(key) === '1') return;
+      } catch (e) {}
+      var delay = {{ settings.welcome_popup_delay | default: 5 | times: 1000 }};
+
+      function openPopup() {
+        var root = document.getElementById('WelcomePopup');
+        if (!root) return;
+
+        function start() {
+          if (typeof root.showDialog === 'function') {
+            root.showDialog();
+          } else {
+            var dialog = root.querySelector('dialog');
+            if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+          }
+          try {
+            localStorage.setItem(key, '1');
+          } catch (e) {}
+        }
+
+        var run = function () {
+          setTimeout(start, delay);
+        };
+
+        if (window.customElements && customElements.whenDefined) {
+          customElements.whenDefined('dialog-component').then(run);
+        } else {
+          run();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', openPopup);
+      } else {
+        openPopup();
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .welcome-popup__dialog {
+    max-width: 420px;
+    padding: 28px 24px 24px;
+    border: 0;
+    border-radius: 12px;
+  }
+
+  .welcome-popup__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .welcome-popup__heading {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+  }
+
+  .welcome-popup__text {
+    margin: 0 0 16px;
+    font-size: 0.9375rem;
+  }
+
+  .welcome-popup__form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .welcome-popup__form input[type='email'] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .welcome-popup__success {
+    margin: 0;
+    color: #13a877;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Welcome popup",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Welcome popup"
+    }
+  ]
+}
+{% endschema %}

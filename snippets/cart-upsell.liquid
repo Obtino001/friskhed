@@ -1,0 +1,115 @@
+{%- liquid
+  assign applicator = settings.cart_upsell_applicator
+  assign scent_collection = settings.cart_upsell_scents
+  assign cart_product_ids = cart.items | map: 'product_id'
+  assign show_applicator = false
+  assign upsell_product = nil
+
+  if applicator != blank
+    unless cart_product_ids contains applicator.id
+      if applicator.available
+        assign show_applicator = true
+      endif
+    endunless
+  endif
+
+  if scent_collection != blank
+    for rec in scent_collection.products limit: 12
+      unless cart_product_ids contains rec.id
+        if rec.available
+          assign upsell_product = rec
+          break
+        endif
+      endunless
+    endfor
+  endif
+-%}
+
+{% if show_applicator or upsell_product %}
+  <div class="cart-upsell">
+    <p class="cart-upsell__heading">Gør ordren komplet</p>
+    {% if show_applicator %}
+      <div class="cart-upsell__row">
+        {% if applicator.featured_image %}
+          {{ applicator.featured_image | image_url: width: 96 | image_tag: alt: applicator.title, loading: 'lazy' }}
+        {% endif %}
+        <div class="cart-upsell__meta">
+          <span class="cart-upsell__title">{{ applicator.title }}</span>
+          <span class="cart-upsell__price">{{ applicator.price | money }}</span>
+        </div>
+        <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">
+          <input type="hidden" name="id" value="{{ applicator.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="button button-secondary">Tilføj</button>
+        </form>
+      </div>
+    {% endif %}
+    {% if upsell_product %}
+      <div class="cart-upsell__row">
+        {% if upsell_product.featured_image %}
+          {{ upsell_product.featured_image | image_url: width: 96 | image_tag: alt: upsell_product.title, loading: 'lazy' }}
+        {% endif %}
+        <div class="cart-upsell__meta">
+          <span class="cart-upsell__title">{{ upsell_product.title }}</span>
+          <span class="cart-upsell__price">{{ upsell_product.price | money }}</span>
+        </div>
+        <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">
+          <input type="hidden" name="id" value="{{ upsell_product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="button button-secondary">Tilføj</button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .cart-upsell {
+    padding: 12px 24px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .cart-upsell__heading {
+    margin: 0 0 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .cart-upsell__row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .cart-upsell__row img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .cart-upsell__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .cart-upsell__title {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cart-upsell__price {
+    font-size: 0.75rem;
+  }
+
+  .cart-upsell .button {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+{% endstylesheet %}

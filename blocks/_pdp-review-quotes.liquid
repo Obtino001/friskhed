@@ -1,0 +1,96 @@
+{%- assign quotes = '' -%}
+<div class="pdp-review-quotes" {{ block.shopify_attributes }}>
+  {% for i in (1..3) %}
+    {% liquid
+      assign author_key = 'author_' | append: i
+      assign quote_key = 'quote_' | append: i
+      assign author = block.settings[author_key]
+      assign quote = block.settings[quote_key]
+    %}
+    {% if quote != blank %}
+      <blockquote class="pdp-review-quotes__item">
+        <p class="pdp-review-quotes__text">“{{ quote | escape }}”</p>
+        {% if author != blank %}
+          <footer class="pdp-review-quotes__author">{{ author | escape }} · Trustpilot</footer>
+        {% endif %}
+      </blockquote>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% stylesheet %}
+  .pdp-review-quotes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .pdp-review-quotes__item {
+    margin: 0;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+  }
+
+  .pdp-review-quotes__text {
+    margin: 0 0 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .pdp-review-quotes__author {
+    font-size: 0.75rem;
+    color: var(--color-foreground-muted, #666);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "PDP review quotes",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "author_1",
+      "label": "Author 1",
+      "default": "Jan"
+    },
+    {
+      "type": "text",
+      "id": "quote_1",
+      "label": "Quote 1",
+      "default": "Som sædvanlig hurtig levering, kan kun anbefale Friskhed"
+    },
+    {
+      "type": "text",
+      "id": "author_2",
+      "label": "Author 2",
+      "default": "Inge Nielsen"
+    },
+    {
+      "type": "text",
+      "id": "quote_2",
+      "label": "Quote 2",
+      "default": "Fantastisk produkt. Endnu mere fantastisk service og lynhurtig levering"
+    },
+    {
+      "type": "text",
+      "id": "author_3",
+      "label": "Author 3",
+      "default": "Camilla"
+    },
+    {
+      "type": "text",
+      "id": "quote_3",
+      "label": "Quote 3",
+      "default": "Altid hurtig modtagelse af vare. Og super kundeservice"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP review quotes"
+    }
+  ]
+}
+{% endschema %}

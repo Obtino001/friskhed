@@ -1,24 +1,28 @@
-
+{%- liquid
+  assign icon_settings = block_settings | default: block.settings
+  assign icon_gap = icon_settings.gap | default: 10
+  assign icon_align = icon_settings.horizontal_alignment | default: 'center'
+-%}
 <div
   class="
     payment-icons
     spacing-style
   "
   style="
-    {% render 'spacing-padding', settings: block_settings %}
-    --icon-gap: {{ block_settings.gap }}px;
-    --alignment: {{ block_settings.horizontal_alignment }};
+    {% if icon_settings %}{% render 'spacing-padding', settings: icon_settings %}{% endif %}
+    --icon-gap: {{ icon_gap }}px;
+    --alignment: {{ icon_align }};
   "
-  {{ block.shopify_attributes }}
+  {% if block %}{{ block.shopify_attributes }}{% endif %}
 >
   <span class="visually-hidden">{{ 'blocks.payment_methods' | t }}</span>
-<ul class="payment-icons__list" role="list">
-  {%- assign paymentIconsFix = "visa,master,mobilepay" | split: "," -%}
-  {%- for type in paymentIconsFix -%}
-                <li class="payment-icons__item"">
-                  {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-                </li>
-              {%- endfor -%}
+  <ul class="payment-icons__list" role="list">
+    {%- assign payment_icons = 'visa,master,mobilepay,apple_pay,google_pay' | split: ',' -%}
+    {%- for type in payment_icons -%}
+      <li class="payment-icons__item">
+        {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+      </li>
+    {%- endfor -%}
   </ul>
 </div>
 

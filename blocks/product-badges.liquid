@@ -20,7 +20,7 @@
   endif
 
   # Logic for Fast Selling (Checks for a specific tag, e.g., "Fast Selling")
-  if product.tags contains settings.fast_selling_tag_trigger
+  if settings.show_fast_selling_badge and product.tags contains settings.fast_selling_tag_trigger
     assign is_fast_selling = true
   endif
 -%}

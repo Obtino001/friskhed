@@ -1,0 +1,101 @@
+{%- liquid
+  assign product = closest.product
+  assign strength = product.metafields.custom.menthol_strength.value | default: product.metafields.custom.menthol_strength
+  assign label = ''
+
+  if strength == blank
+    assign title_down = product.title | downcase
+    if product.tags contains 'mild' or title_down contains 'mild'
+      assign strength = 1
+    elsif product.tags contains 'medium' or title_down contains 'medium'
+      assign strength = 3
+    elsif product.tags contains 'strong' or title_down contains 'stærk' or title_down contains 'strong'
+      assign strength = 4
+    elsif product.tags contains 'ultra' or title_down contains 'ultra' or title_down contains 'ice'
+      assign strength = 5
+    endif
+  endif
+
+  assign strength = strength | plus: 0
+
+  case strength
+    when 1
+      assign label = 'Mild'
+    when 2
+      assign label = 'Let'
+    when 3
+      assign label = 'Medium'
+    when 4
+      assign label = 'Stærk'
+    when 5
+      assign label = 'Ultra'
+  endcase
+-%}
+
+{% if strength > 0 %}
+  <div class="strength-guide" {{ block.shopify_attributes }}>
+    <div class="strength-guide__header">
+      <span class="strength-guide__title">Mentholstyrke</span>
+      <span class="strength-guide__label">{{ label }}</span>
+    </div>
+    <div class="strength-guide__scale" aria-label="Mentholstyrke {{ strength }} ud af 5">
+      {% for i in (1..5) %}
+        <span class="strength-guide__step{% if i <= strength %} is-active{% endif %}"></span>
+      {% endfor %}
+    </div>
+    <p class="strength-guide__hint">Mild → Ultra · vælg den styrke der passer dig</p>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .strength-guide {
+    width: 100%;
+  }
+
+  .strength-guide__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    font-size: 0.875rem;
+  }
+
+  .strength-guide__title {
+    font-weight: 600;
+  }
+
+  .strength-guide__scale {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+
+  .strength-guide__step {
+    height: 8px;
+    border-radius: 99px;
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .strength-guide__step.is-active {
+    background: #13a877;
+  }
+
+  .strength-guide__hint {
+    margin: 6px 0 0;
+    font-size: 0.75rem;
+    color: var(--color-foreground-muted, #666);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Menthol strength guide",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "Menthol strength guide"
+    }
+  ]
+}
+{% endschema %}

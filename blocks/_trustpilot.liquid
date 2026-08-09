@@ -1,5 +1,5 @@
-
 {%- assign block_settings = block.settings -%}
+{%- assign trustpilot_url = settings.trustpilot_url -%}
 
 {%- style -%}
 .trust-pill {
@@ -15,8 +15,9 @@
     backdrop-filter: blur(30px);
     max-width: 400px;
     margin: 0 auto;
-    
-    @media screen and (max-width:768px){
+}
+@media screen and (max-width:768px){
+  .trust-pill {
     flex-direction: column;
     border-radius: 10px;
   }
@@ -26,42 +27,44 @@
     object-fit: contain;
     width:82px;
 }
-
 span.trust-pill__text {
     white-space: nowrap;
     font-weight: 400;
     font-size: 14px;
     line-height: 100%;
-    
-   @media screen and (max-width:768px){
+}
+@media screen and (max-width:768px){
+  span.trust-pill__text {
     font-size:12px;
   }
 }
 .trust-pill__stars{color:#00b67a;letter-spacing:1px}
-
 {%- endstyle -%}
 
-<div
+<a
   class="trust-pill trust-pill--{{ section.id }}"
+  href="{{ trustpilot_url }}"
+  {% if trustpilot_url != blank %}target="_blank" rel="noopener"{% endif %}
   style="
     --tp-text: {{ block_settings.text_color }};
     --tp-icon-size: {{ block_settings.icon_size }}px;
     --tp-font-size: {{ block_settings.font_size }}px;
+    text-decoration: none;
   "
+  {{ block.shopify_attributes }}
 >
   {% if block_settings.icon != blank %}
     {{ block_settings.icon
       | image_url: width: 400
-      | image_tag: loading: 'lazy', class: 'trust-pill__icon', alt: 'Icon' }}
+      | image_tag: loading: 'lazy', class: 'trust-pill__icon', alt: 'Trustpilot' }}
   {% else %}
     <span class="trust-pill__stars">★★★★★</span>
   {% endif %}
 
   <span class="trust-pill__text">
-    {{ block_settings.text }}
+    {% render 'trustpilot-claim' %}
   </span>
-</div>
-
+</a>
 
 {% schema %}
 {
@@ -69,10 +72,15 @@ span.trust-pill__text {
   "class": "section",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Text always comes from Theme settings → Friskhed trust & identity."
+    },
+    {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
-      "default": "<p>Betroet af over 250+ virksomhedsejere</p>"
+      "label": "Legacy text (unused)",
+      "default": "<p>4,9 på Trustpilot · 469 anmeldelser</p>",
+      "info": "Unused. Live text always comes from Theme settings."
     },
     {
       "type": "image_picker",
@@ -113,5 +121,4 @@ span.trust-pill__text {
     }
   ]
 }
-
 {% endschema %}
