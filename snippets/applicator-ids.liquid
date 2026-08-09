@@ -1,0 +1,13 @@
+{%- comment -%}
+  Outputs :id:id: for classic + color applicators.
+{%- endcomment -%}
+{%- liquid
+  assign ids = ':'
+  if settings.cart_upsell_applicator != blank
+    assign ids = ids | append: settings.cart_upsell_applicator.id | append: ':'
+  endif
+  if settings.cart_upsell_applicator_alt != blank
+    assign ids = ids | append: settings.cart_upsell_applicator_alt.id | append: ':'
+  endif
+-%}
+{{- ids -}}

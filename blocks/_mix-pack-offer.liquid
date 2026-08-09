@@ -1,10 +1,21 @@
-{%- if settings.mix_pack_enable -%}
+{%- liquid
+  assign current_product = closest.product | default: product
+  assign scent_collection = settings.cart_upsell_scents
+  assign is_scent = false
+  if scent_collection != blank and current_product != blank
+    assign product_collection_ids = current_product.collections | map: 'id'
+    if product_collection_ids contains scent_collection.id
+      assign is_scent = true
+    endif
+  endif
+-%}
+{%- if settings.mix_pack_enable and is_scent -%}
   {%- liquid
     assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
     assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
     assign qty_3 = settings.mix_pack_3_qty | default: 3
     assign qty_5 = settings.mix_pack_5_qty | default: 5
-    assign scent_url = settings.cart_upsell_scents.url
+    assign scent_url = scent_collection.url
   -%}
   <div class="mix-pack-offer" {{ block.shopify_attributes }}>
     <p class="mix-pack-offer__text">

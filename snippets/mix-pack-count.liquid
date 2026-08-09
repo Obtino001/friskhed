@@ -1,17 +1,21 @@
 {%- liquid
   assign mix_pack_qty = 0
   assign mix_collection = settings.cart_upsell_scents
-  assign applicator = settings.cart_upsell_applicator
-
+-%}
+{%- capture applicator_ids -%}{% render 'applicator-ids' %}{%- endcapture -%}
+{%- liquid
   for item in cart.items
     assign count_item = false
+    assign item_token = ':' | append: item.product_id | append: ':'
 
-    if mix_collection != blank
+    if applicator_ids contains item_token
+      assign count_item = false
+    elsif mix_collection != blank
       assign item_collection_ids = item.product.collections | map: 'id'
       if item_collection_ids contains mix_collection.id
         assign count_item = true
       endif
-    elsif applicator == blank or item.product_id != applicator.id
+    else
       assign count_item = true
     endif
 

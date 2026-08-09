@@ -163,9 +163,9 @@
             "badge": "",
             "title": "Starter kit",
             "price": "Kugler + applikator",
-            "text": "Aroma-kugler plus dispenser — klar til brug.",
+            "text": "Aroma-kugler plus classic eller color applikator — vælg én.",
             "button_label": "Se applikator",
-            "button_link": "",
+            "button_link": "shopify://products/aroma-kugle-dispenser",
             "featured": false
           }
         }

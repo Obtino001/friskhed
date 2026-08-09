@@ -136,8 +136,14 @@
       {
         "type": "product",
         "id": "cart_upsell_applicator",
-        "label": "Applicator product",
-        "info": "Friskhed applicator: aroma-kugle-dispenser"
+        "label": "Classic applicator",
+        "info": "e.g. aroma-kugle-dispenser"
+      },
+      {
+        "type": "product",
+        "id": "cart_upsell_applicator_alt",
+        "label": "Color applicator",
+        "info": "Second type, e.g. Color Aroma Applikator. Customer picks one — not both."
       },
       {
         "type": "collection",

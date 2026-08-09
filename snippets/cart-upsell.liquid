@@ -1,9 +1,13 @@
 {%- liquid
   assign applicator = settings.cart_upsell_applicator
+  assign applicator_alt = settings.cart_upsell_applicator_alt
   assign scent_collection = settings.cart_upsell_scents
   assign cart_product_ids = cart.items | map: 'product_id'
   assign skip_product_id = exclude_product.id
   assign show_applicator = false
+  assign show_applicator_alt = false
+  assign viewing_applicator = false
+  assign applicator_in_cart = false
   assign upsell_product = nil
   assign qty_3 = settings.mix_pack_3_qty | default: 3
   assign qty_5 = settings.mix_pack_5_qty | default: 5
@@ -11,26 +15,44 @@
   assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
   assign upsell_heading = 'Gør ordren komplet'
 -%}
+{%- capture applicator_ids -%}{% render 'applicator-ids' %}{%- endcapture -%}
 {%- capture mix_pack_qty -%}{% render 'mix-pack-count' %}{%- endcapture -%}
 {%- liquid
   assign mix_pack_qty = mix_pack_qty | plus: 0
   assign price_3_label = price_3 | money_without_trailing_zeros
   assign price_5_label = price_5 | money_without_trailing_zeros
+  assign skip_token = ':' | append: skip_product_id | append: ':'
+  if skip_product_id != blank and applicator_ids contains skip_token
+    assign viewing_applicator = true
+  endif
+  if applicator != blank and cart_product_ids contains applicator.id
+    assign applicator_in_cart = true
+  endif
+  if applicator_alt != blank and cart_product_ids contains applicator_alt.id
+    assign applicator_in_cart = true
+  endif
+
   if settings.mix_pack_enable and mix_pack_qty > 0 and mix_pack_qty < qty_3
     assign upsell_heading = 'Mix ' | append: qty_3 | append: ' stk for ' | append: price_3_label
   elsif settings.mix_pack_enable and mix_pack_qty >= qty_3 and mix_pack_qty < qty_5
     assign upsell_heading = 'Mix ' | append: qty_5 | append: ' stk for ' | append: price_5_label
   endif
 
-  if applicator != blank
-    unless cart_product_ids contains applicator.id
+  unless viewing_applicator or applicator_in_cart
+    if applicator != blank and applicator.available
       unless skip_product_id != blank and applicator.id == skip_product_id
-        if applicator.available
-          assign show_applicator = true
-        endif
+        assign show_applicator = true
       endunless
-    endunless
-  endif
+    endif
+    if applicator_alt != blank and applicator_alt.available
+      unless skip_product_id != blank and applicator_alt.id == skip_product_id
+        assign show_applicator_alt = true
+      endunless
+    endif
+    if show_applicator or show_applicator_alt
+      assign upsell_heading = 'Vælg en applikator'
+    endif
+  endunless
 
   if scent_collection != blank
     for rec in scent_collection.products limit: 12
@@ -48,7 +70,7 @@
 
 <script src="{{ 'cart-upsell.js' | asset_url }}" type="module"></script>
 
-{% if show_applicator or upsell_product %}
+{% if show_applicator or show_applicator_alt or upsell_product %}
   <cart-upsell class="cart-upsell{% if context == 'pdp' %} cart-upsell--pdp{% endif %}">
     <p class="cart-upsell__heading">{{ upsell_heading }}</p>
 
@@ -56,7 +78,14 @@
       {% render 'cart-upsell-item', product: applicator, section: section %}
     {% endif %}
 
+    {% if show_applicator_alt %}
+      {% render 'cart-upsell-item', product: applicator_alt, section: section %}
+    {% endif %}
+
     {% if upsell_product %}
+      {% if show_applicator or show_applicator_alt %}
+        <p class="cart-upsell__heading cart-upsell__heading--sub">Gør ordren komplet</p>
+      {% endif %}
       {% render 'cart-upsell-item', product: upsell_product, section: section %}
     {% endif %}
   </cart-upsell>
@@ -83,6 +112,10 @@
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.3;
+  }
+
+  .cart-upsell__heading--sub {
+    margin-top: 12px;
   }
 
   .cart-upsell__row {
