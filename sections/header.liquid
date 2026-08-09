@@ -185,24 +185,16 @@
   }
 </script>
 <style>
-  header-component#header-component {
-    padding: 0;
-  }
-
-  /* Frosted bar only after scroll — at top use normal Horizon header */
-  #header-component[data-sticky-state='active'] .header {
-    background-color: rgb(246 246 246 / 94%);
-    backdrop-filter: blur(17px);
-  }
-
-  #header-component[data-sticky-state='active'] .header__row {
-    background-color: transparent;
-  }
-
-  #header-component:not([data-sticky-state='active']) .header {
-    background-color: transparent;
-    backdrop-filter: none;
-  }
+header-component#header-component {
+  padding: 0;
+}
+.header__row {
+  background: transparent;
+}
+.header {
+  background-color: #F6F6F699;
+  backdrop-filter: blur(17px);
+}
 </style>
 <header-component
   id="header-component"
