@@ -162,34 +162,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Vi laver ting, der fungerer bedre og holder længere. Vores produkter løser reelle problemer med et rent design og ærlige materialer.</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_ABm7wM": {
-              "type": "text",
-              "name": "t:names.text",
-              "disabled": true,
-              "settings": {
-                "text": "<p>Container-Låse.dk er en dansk specialist i højsikkerhedsløsninger til shippingcontainere. Betroet af professionelle inden for byggeri, logistik og lager.</p>",
+                "text": "<p>Vi laver ting, der fungerer bedre og holder længere. Vores produkter løser reelle problemer med et rent design og ærlige materialer.</p><p><strong>Friskhed.dk ApS</strong></p><p>CVR: 43519379</p><p>Lunikvej 20b, 2670 Greve</p><p><a href=\"mailto:kontakt@friskhed.dk\">kontakt@friskhed.dk</a></p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -214,8 +187,7 @@
           },
           "block_order": [
             "image_M33VRL",
-            "text_chtmRB",
-            "text_ABm7wM"
+            "text_chtmRB"
           ]
         },
         "menu_TkeXRt": {
