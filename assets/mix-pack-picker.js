@@ -232,10 +232,10 @@ class MixPackPicker extends HTMLElement {
     const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
     const ready = count >= this.#target;
     const statusText = ready
-      ? `Rabat klar · ${price} kr`
+      ? `Rabatten er klar — ${this.#target} for ${price} kr`
       : count === 0
-        ? 'Vælg dine scents'
-        : `Vælg ${this.#target - count} mere`;
+        ? 'Tryk på en scent for at vælge'
+        : `Mangler ${this.#target - count}`;
 
     this.#all('[data-mix-count]').forEach((el) => {
       el.textContent = String(count);
@@ -249,14 +249,15 @@ class MixPackPicker extends HTMLElement {
     this.#all('[data-mix-submit]').forEach((submit) => {
       if (!(submit instanceof HTMLButtonElement)) return;
       submit.disabled = !ready;
-      submit.textContent = ready ? `Læg i kurv · ${price} kr` : `Vælg ${this.#target - count} mere`;
+      submit.textContent = ready
+        ? `Læg i kurv · ${price} kr`
+        : count === 0
+          ? `Vælg ${this.#target} scents`
+          : `Vælg ${this.#target - count} mere`;
     });
 
     this.#all('[data-mix-offer]').forEach((offer) => {
-      const qty = Number(offer.getAttribute('data-mix-offer'));
-      const active = qty === this.#target;
-      offer.classList.toggle('is-active', active);
-      offer.classList.toggle('is-ready', active && ready);
+      offer.classList.toggle('is-active', Number(offer.getAttribute('data-mix-offer')) === this.#target);
     });
     this.#top?.classList.toggle('is-ready', ready);
 
