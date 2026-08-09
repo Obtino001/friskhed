@@ -448,14 +448,16 @@
     cursor: pointer;
   }
 
-  body[data-mix-picker='on'] .product-grid__item .product-card {
-    transition: outline-color 0.15s ease;
-    outline: 2px solid transparent;
-    outline-offset: -2px;
+  body[data-mix-picker='on'] .product-grid__item {
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
   }
 
-  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card {
-    outline-color: #121212;
+  body[data-mix-picker='on'] .product-grid__item.is-mix-selected {
+    border-color: #0b6b47;
+    background: rgb(11 107 71 / 0.05);
+    box-shadow: 0 0 0 1px #0b6b47;
   }
 
   .mix-pick-mark {
@@ -469,13 +471,13 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #121212;
+    background: #0b6b47;
     color: #fff;
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1;
     pointer-events: none;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 0.22);
+    box-shadow: 0 2px 6px rgb(11 107 71 / 0.35);
   }
 
   body[data-mix-picker='on'] .product-grid__item.is-mix-locked {
