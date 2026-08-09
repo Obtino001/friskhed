@@ -52,7 +52,7 @@
             "custom_width_mobile": 100,
             "height": "fit",
             "details_position": "flex-start",
-            "gap": 16,
+            "gap": 10,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
             "color_scheme": "scheme-1",
@@ -163,8 +163,8 @@
                 "text_color": "#333333",
                 "width": "100%",
                 "alignment": "left",
-                "padding_top": 10,
-                "padding_bottom": 10,
+                "padding_top": 2,
+                "padding_bottom": 2,
                 "padding_left": 0,
                 "padding_right": 0
               },
@@ -242,7 +242,7 @@
                 "horizontal_alignment": "flex-start",
                 "gap": 10,
                 "padding-block-start": 0,
-                "padding-block-end": 10,
+                "padding-block-end": 4,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
