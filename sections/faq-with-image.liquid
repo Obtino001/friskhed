@@ -1,0 +1,405 @@
+
+
+{%- style -%}
+.section-{{ section.id }}-padding {
+padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+overflow: hidden;
+}
+
+@media screen and (min-width: 750px) {
+.section-{{ section.id }}-padding {
+padding-top: {{ section.settings.padding_top }}px;
+padding-bottom: {{ section.settings.padding_bottom }}px;
+}
+}
+
+.faq-container-full {
+width: 100%;
+padding: 0;
+margin: 0;
+}
+
+.faq-wrapper {
+display: flex;
+flex-direction: column-reverse; /* Mobile: Image top, Text bottom */
+width: 100%;
+}
+
+@media screen and (min-width: 990px) {
+.faq-wrapper {
+flex-direction: row;
+align-items: stretch;
+min-height: 600px; /* Ensure a nice height on desktop */
+}
+}
+
+.faq-content {
+display: flex;
+flex-direction: column;
+justify-content: center;
+flex: 1;
+}
+.faq-content-inner {
+padding: 40px 60px 40px 40px;
+background: #D9D9D933;
+border-top-left-radius: 15px;
+border-bottom-left-radius: 15px;
+}
+@media screen and (min-width: 990px) {
+.faq-content {
+width: 50%;
+margin-left: max(40px, calc((100vw - 100%) / 2));
+}
+}
+
+.faq-heading {
+font-size: {{ section.settings.heading_size }}px;
+font-family: Sora;
+font-weight: 700;
+line-height: 120%;
+letter-spacing: -2%;
+vertical-align: middle;
+
+color: {{ section.settings.text_color }};
+}
+
+
+.faq-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin-bottom: 30px;
+}
+
+accordion-item {
+display: flex;
+background-color: {{ section.settings.accordion_bg }};
+border-radius: 8px;
+overflow: hidden;
+transition: background-color 0.3s ease;
+padding: 10px 20px;
+min-height: 60px;
+width: 100%;
+/* align-items: center; */
+justify-content: center;
+flex-direction: column;
+}
+
+accordion-item.active {
+background-color: {{ section.settings.accordion_bg | color_darken: 5 }};
+}
+
+.faq-trigger {
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    font-family: Inter;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    line-height: 48px;
+    letter-spacing: 0%;
+    vertical-align: middle;
+    text-transform: capitalize;
+    text-align: left;
+    line-height: 150%;
+}
+.faq-icon {
+width: 20px;
+height: 20px;
+transition: transform 0.3s ease;
+flex-shrink: 0;
+margin-left: 15px;
+pointer-events: none;
+stroke: #ffffff;
+}
+
+accordion-item.active .faq-icon {
+transform: rotate(180deg);
+}
+
+.faq-answer-wrapper {
+height: 0;
+overflow: hidden;
+transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.faq-answer-inner {
+padding: 0px;
+color: rgba(255, 255, 255, 0.9);
+font-size: 15px;
+padding-top: 5px;
+}
+
+.faq-btn {
+display: inline-block;
+padding: 12px 30px;
+color: {{ section.settings.btn_color }};
+background: transparent;
+text-decoration: none;
+font-weight: 600;
+font-size: 14px;
+border-radius: 6px;
+width: fit-content;
+border: 1px solid currentColor;
+margin-top: 10px;
+}
+.faq-btn:hover{
+background-color: #000000;
+color: #fff;
+}
+.faq-image-container {
+width: 100%;
+position: relative;
+min-height: 350px;
+}
+
+@media screen and (min-width: 990px) {
+.faq-image-container {
+width: 50%;
+min-height: auto; 
+border-top-left-radius: 16px;
+border-bottom-left-radius: 16px;
+}
+}
+
+.faq-image {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+border-top-left-radius: 16px;
+border-bottom-left-radius: 16px;
+max-height: 730px;
+}
+@media screen and (max-width: 990px) {
+.faq-heading{
+font-size: 26px;
+}
+img.faq-image {
+border-radius: 10px 10px 0 0;
+}
+.faq-content-inner {
+    padding: 40px 14px;
+    border-radius: 0 0 10px 10px;
+}
+.faq-trigger {
+font-size: 14px;
+line-height: 140%;
+}
+}
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  <div class="faq-container-full">
+    <div class="faq-wrapper">
+      
+      <div class="faq-content">
+      <div class="faq-content-inner">
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="faq-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        <div class="faq-list">
+          {%- for block in section.blocks -%}
+            <accordion-item class="faq-item" {{ block.shopify_attributes }}>
+              <button class="faq-trigger" type="button" aria-expanded="false">
+                <span>{{ block.settings.question }}</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="faq-answer-wrapper">
+                <div class="faq-answer-inner">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </accordion-item>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.btn_text != blank -%}
+          <a href="{{ section.settings.btn_url }}" class="faq-btn">
+            {{ section.settings.btn_text }}
+          </a>
+        {%- endif -%}
+      </div>
+      </div>
+
+      <div class="faq-image-container">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1600 | image_tag: 
+            loading: 'lazy',
+            class: 'faq-image',
+            sizes: '(min-width: 990px) 50vw, 100vw'
+          }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'faq-image' }}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  if (!customElements.get('accordion-item')) {
+    class AccordionItem extends HTMLElement {
+      constructor() {
+        super();
+        this.trigger = this.querySelector('.faq-trigger');
+        this.content = this.querySelector('.faq-answer-wrapper');
+        this.isOpen = false;
+        this.trigger.addEventListener('click', this.toggle.bind(this));
+      }
+
+      toggle() {
+        if (this.isOpen) {
+          this.close();
+        } else {
+          // Auto-close siblings
+          const siblings = this.closest('.faq-list').querySelectorAll('accordion-item');
+          siblings.forEach(sibling => {
+            if (sibling !== this && sibling.isOpen) sibling.close();
+          });
+          this.open();
+        }
+      }
+
+      open() {
+        this.isOpen = true;
+        this.classList.add('active');
+        this.trigger.setAttribute('aria-expanded', 'true');
+        this.content.style.height = this.content.scrollHeight + 'px';
+      }
+
+      close() {
+        this.isOpen = false;
+        this.classList.remove('active');
+        this.trigger.setAttribute('aria-expanded', 'false');
+        this.content.style.height = '0';
+      }
+    }
+    customElements.define('accordion-item', AccordionItem);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Split Full Width",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ofte stillede spørgsmål"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 42
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Side Image"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accordion_bg",
+      "label": "Accordion Background",
+      "default": "#1E429F"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "View All FAQs"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Text Color",
+      "default": "#1E429F"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Hvordan installerer jeg låsen?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Installation er enkel og kræver ikke specialværktøj.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Split Full Width",
+      "blocks": [
+        { "type": "faq_item" },
+        { "type": "faq_item" },
+        { "type": "faq_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,87 @@
+{% liquid
+  assign product = closest.product
+-%}
+{%- liquid
+  assign target_variant = product.selected_or_first_available_variant
+  assign inventory_qty = target_variant.inventory_quantity
+  
+  assign is_low_stock = false
+  assign is_no_stock = false
+  assign is_fast_selling = false
+
+  # Logic for No Stock
+  unless product.available or inventory_qty > 0
+    assign is_no_stock = true
+  endunless
+
+  # Logic for Low Stock (Only if product is available)
+  if product.available and inventory_qty > 0 and inventory_qty <= settings.low_stock_threshold
+    assign is_low_stock = true
+  endif
+
+  # Logic for Fast Selling (Checks for a specific tag, e.g., "Fast Selling")
+  if product.tags contains settings.fast_selling_tag_trigger
+    assign is_fast_selling = true
+  endif
+-%}
+
+
+<div class="badge-container">
+  
+  {%- comment -%} NO STOCK BADGE {%- endcomment -%}
+  {%- if is_no_stock -%}
+    <span class="status-badge badge-no-stock">
+      <span class="status-dot"></span>
+      {{ settings.no_stock_text }}
+      {{ inventory_qty }}
+    </span>
+  
+  {%- comment -%} LOW STOCK BADGE {%- endcomment -%}
+  {%- elsif is_low_stock -%}
+    <span class="status-badge badge-low-stock">
+      <span class="status-dot"></span>
+      {{ settings.low_stock_text }}
+    </span>
+
+  {%- comment -%} FAST SELLING BADGE {%- endcomment -%}
+  {%- elsif is_fast_selling -%}
+    <span class="status-badge badge-fast-selling">
+      <span class="status-dot"></span>
+      {{ settings.fast_selling_text }}
+    </span>
+  {%- endif -%}
+
+</div>
+
+<style>
+  .badge-low-stock {
+    background-color: {{ settings.low_stock_bg }};
+    color: {{ settings.low_stock_color }};
+    border-color: {{ settings.low_stock_color | color_modify: 'alpha', 0.3 }};
+  }
+
+  .badge-no-stock {
+    background-color: {{ settings.no_stock_bg }};
+    color: {{ settings.no_stock_color }};
+    border-color: {{ settings.no_stock_color | color_modify: 'alpha', 0.3 }};
+    gap: 5px;
+  }
+
+  .badge-fast-selling {
+    background-color: {{ settings.fast_selling_bg }};
+    color: {{ settings.fast_selling_color }};
+    border-color: {{ settings.fast_selling_color | color_modify: 'alpha', 0.3 }};
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Status Badges",
+  
+  "presets": [
+    {
+      "name": "Product Status Badges"
+    }
+  ]
+}
+{% endschema %}

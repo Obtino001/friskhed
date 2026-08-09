@@ -1,0 +1,117 @@
+
+{%- assign block_settings = block.settings -%}
+
+{%- style -%}
+.trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    color: var(--tp-text,#fff);
+    font-size: var(--tp-font-size,14px);
+    line-height: 1;
+    background: #FFFFFF1A;
+    backdrop-filter: blur(30px);
+    max-width: 400px;
+    margin: 0 auto;
+    
+    @media screen and (max-width:768px){
+    flex-direction: column;
+    border-radius: 10px;
+  }
+}
+.trust-pill__icon.trust-pill__icon {
+    height: 20px;
+    object-fit: contain;
+    width:82px;
+}
+
+span.trust-pill__text {
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    
+   @media screen and (max-width:768px){
+    font-size:12px;
+  }
+}
+.trust-pill__stars{color:#00b67a;letter-spacing:1px}
+
+{%- endstyle -%}
+
+<div
+  class="trust-pill trust-pill--{{ section.id }}"
+  style="
+    --tp-text: {{ block_settings.text_color }};
+    --tp-icon-size: {{ block_settings.icon_size }}px;
+    --tp-font-size: {{ block_settings.font_size }}px;
+  "
+>
+  {% if block_settings.icon != blank %}
+    {{ block_settings.icon
+      | image_url: width: 400
+      | image_tag: loading: 'lazy', class: 'trust-pill__icon', alt: 'Icon' }}
+  {% else %}
+    <span class="trust-pill__stars">★★★★★</span>
+  {% endif %}
+
+  <span class="trust-pill__text">
+    {{ block_settings.text }}
+  </span>
+</div>
+
+
+{% schema %}
+{
+  "name": "Trust Pill",
+  "class": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Betroet af over 250+ virksomhedsejere</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon (optional)",
+      "info": "Upload an icon or leave empty to use stars"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Pill"
+    }
+  ]
+}
+
+{% endschema %}

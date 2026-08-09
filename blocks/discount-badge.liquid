@@ -1,0 +1,189 @@
+{% comment %}
+  File: blocks/product-badges.liquid
+  Theme Style: Horizon / Dawn Compatible
+{% endcomment %}
+{%- liquid
+  assign product = section.settings.product | default: product
+  assign show_badges_custom = block.settings.show_badges
+  assign show_badges_discount = block.settings.show_badges_discount
+  assign show_badges_sold = block.settings.show_badges_sold
+  
+  assign badges = ''
+  
+  if product and product != empty
+    assign product_for_discount = product.selected_or_first_available_variant | default: product
+    
+    # 1. Sale / Discount Badge
+    if product_for_discount.compare_at_price > product_for_discount.price and show_badges_discount
+      assign discount_percentage = product_for_discount.compare_at_price | minus: product_for_discount.price | times: 100 | divided_by: product_for_discount.compare_at_price
+      
+      if discount_percentage > 0
+        assign discount_text = '-' | append: discount_percentage | append: '%'
+        assign badges = badges | append: discount_text | append: ','
+      endif
+    endif
+
+    # 2. Preorder Badge
+    if product.metafields.theme.preorder.value
+      assign tag = 'products.product.preorder_badge' | t | default: 'Pre-order'
+      assign badges = badges | append: tag | append: ','
+    endif
+
+    # 3. Custom Tags (badge:Tag Name)
+    if show_badges_custom
+      for tag in product.tags
+        if tag contains 'badge:'
+          assign badge = tag | remove: 'badge:' | strip
+          assign badges = badges | append: badge | append: ','
+        endif
+      endfor
+    endif
+
+    # 4. Sold Out Badge
+    if product.available == false and show_badges_sold
+      assign tag = 'products.product.sold_out' | t | default: 'Sold Out'
+      assign badges = badges | append: tag | append: ','
+    endif
+  endif
+-%}
+
+{%- if badges != '' -%}
+<div class="product-badges-wrapper" style="
+  padding-top: {{ block.settings.padding_top }}px;
+  padding-bottom: {{ block.settings.padding_bottom }}px;
+  text-align: {{ block.settings.alignment }};
+  --badge-font-size: {{ block.settings.font_size }}px;
+" {{ block.shopify_attributes }}>
+
+
+    {% style %}
+      /* Horizon-style Badge Variables */
+      :root {
+        --color-badge-bg: {{ settings.sale_badge_color_scheme.settings.background | default: '#000000' }};
+        --color-badge-text: {{ settings.sale_badge_color_scheme.settings.text | default: '#ffffff' }};
+      }
+
+      .product-card__badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: {{ block.settings.alignment | replace: 'left', 'flex-start' | replace: 'right', 'flex-end' }};
+      }
+
+      .product-card__badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 1.3rem;
+        background-color:  #f87b3e;
+        color: var(--color-badge-text);
+        border: 1px solid transparent;
+        border-radius:4px; /* Tries to use theme setting, defaults to pill shape */
+        
+        font-family: var(--font-body-family);
+        font-size: var(--badge-font-size);
+        font-weight: 600; /* Semi-bold */
+        letter-spacing: 0.05rem;
+        line-height: 1;
+        text-transform: uppercase; /* Horizon style is usually uppercase */
+        word-break: break-word;
+      }
+    {% endstyle %}
+
+    {%- assign badges_array = badges | split: ',' -%}
+
+    <div class="product-card__badges">
+      {%- for badge in badges_array -%}
+        {% if badge != blank %}
+          <span class="product-card__badge">{{ badge }}</span>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+    
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Badges",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show Custom Badges (Tags)",
+      "info": "Use tags starting with 'badge:' on your products.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges_discount",
+      "label": "Show Sale/Discount Badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges_sold",
+      "label": "Show Sold Out Badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 11
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Badges"
+    }
+  ]
+}
+{% endschema %}

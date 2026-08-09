@@ -1,0 +1,117 @@
+{% if settings.free_shipping %}
+
+{% comment %} --- 1. Liquid Logic & Math --- {% endcomment %}
+{% assign free_shipping_threshold = settings.free_shipping_minimum | times: 100 %}
+{% assign cart_total = cart.total_price %}
+
+{% comment %} Calculate Percentage (capped at 100) {% endcomment %}
+{% if free_shipping_threshold > 0 %}
+  {% assign percentage = cart_total | times: 100.0 | divided_by: free_shipping_threshold %}
+{% else %}
+  {% assign percentage = 100 %}
+{% endif %}
+
+{% if percentage > 100 %}{% assign percentage = 100 %}{% endif %}
+
+{% comment %} Calculate Remaining Amount {% endcomment %}
+{% assign remaining_amount = free_shipping_threshold | minus: cart_total %}
+
+
+{% comment %} --- 2. Styles --- {% endcomment %}
+<style>
+  .free-shipping-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    width: 100%;
+    padding-inline: 24px;
+    padding-inline: 24px;
+    margin-top: -8px;
+    z-index: 9;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 34px;
+  }
+
+  .free-shipping--text { 
+    margin-bottom: 5px; 
+    text-align: left; 
+  }
+  
+  .free-shipping--bar-wrapper {
+    background: #cfcfcf;
+    height: 6px;
+    width: 100%;
+    position: relative;
+    margin-top: 15px;
+    border-radius: 50px;
+  }
+
+  .free-shipping--fill {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    height: 100%;
+    background: #000;
+    border-radius: 50px;
+    /* We use inline style for width based on liquid variable */
+  }
+
+  .truck-icon-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; 
+    height: 32px; 
+    z-index: 2;
+    background: #fff; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    /* Left position is handled by Liquid */
+  }
+
+  .truck-icon-wrapper img { 
+    height: 24px; 
+    width: 24px; 
+    object-fit: contain; 
+  }
+</style>
+
+{% comment %} --- 3. HTML Layout --- {% endcomment %}
+<div class="free-shipping-container">
+  
+  <div class="free-shipping--text">
+    {% if cart_total >= free_shipping_threshold %}
+      {% comment %} Goal Met Message {% endcomment %}
+      <div class="free-shipping--text-full">
+        <span>{{ settings.free_shipping_met }}</span>
+      </div>
+    {% else %}
+      {% comment %} Goal NOT Met Message {% endcomment %}
+      <div class="free-shipping--text-remaining">
+        {% capture remaining_money %}<span>{{ remaining_amount | money }}</span>{% endcapture %}
+        {{ settings.free_shipping_not_met | replace: "amount", remaining_money }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="free-shipping--bar-wrapper">
+    {% comment %} The Fill Bar {% endcomment %}
+    <div class="free-shipping--fill" style="width: {{ percentage }}%;"></div>
+
+    {% comment %} The Truck Icon {% endcomment %}
+    <div class="truck-icon-wrapper" style="left: {{ percentage }}%;">
+      <img src="https://cdn.shopify.com/s/files/1/0484/5361/5774/files/transport.png?v=1771068849" alt="Shipping Truck">
+    </div>
+    
+  </div>
+
+</div>
+{% endif %}

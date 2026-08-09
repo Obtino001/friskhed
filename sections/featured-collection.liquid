@@ -1,0 +1,91 @@
+<custom-slider class="template-slider-section" data-block-id="{{ section.id }}">
+  <div class="slider-wrapper relative-container">
+    
+    <swiper-container 
+        init="false" 
+        class="js-swiper-template"
+        data-swiper-config='{
+            "autoplay": {{ section.settings.enable_autoplay | default: false }},
+            "autoplayInterval": {{ section.settings.autoplay_interval | times: 1000 | default: 3000 }},
+            "mobileSlides": {{ section.settings.mobile_slides | default: 1.2 }},
+            "mobileSpacing": {{ section.settings.mobile_spacing | default: 16 }},
+            "desktopSlides": {{ section.settings.desktop_slides | default: 4 }},
+            "tabletSlides": {{ section.settings.tablet_slides | default: 3 }},
+            "desktopSpacing": {{ section.settings.desktop_spacing | default: 24 }}
+        }'
+    >
+        {% for product in section.settings.collection.products %}
+            <swiper-slide>
+                {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
+            </swiper-slide>
+        {%- endfor -%}
+    </swiper-container>
+
+    <div class="swiper-custom-controls">
+        <div class="swiper-progress-track
+        {% unless section.settings.mobile_progress_bar %}hide-on-mobile{% endunless %} 
+        {% unless section.settings.desktop_progress_bar %}hide-on-desktop{% endunless %}">
+          <div class="swiper-progress-fill"> </div>
+        </div>
+        <div class="swiper-custom-controls-nav">
+          <div class="swiper-custom-prev swiper-custom-arrow 
+            {% unless section.settings.mobile_arrows %}hide-on-mobile{% endunless %} 
+            {% unless section.settings.desktop_arrows %}hide-on-desktop{% endunless %}">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          </div>
+          <div class="swiper-custom-next swiper-custom-arrow 
+            {% unless section.settings.mobile_arrows %}hide-on-mobile{% endunless %} 
+            {% unless section.settings.desktop_arrows %}hide-on-desktop{% endunless %}">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </div>
+        </div>
+    </div>
+
+    <div class="swiper-custom-scrollbar
+        {% unless section.settings.mobile_scrollbar %}hide-on-mobile{% endunless %} 
+        {% unless section.settings.desktop_scrollbar %}hide-on-desktop{% endunless %}">
+    </div>
+  </div>
+</custom-slider>
+
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "class": "section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    { "type": "text", "id": "block_heading", "label": "Heading", "default": "Swiper template" },
+    { "type": "header", "content": "⚙️ Configuration" },
+    { "type": "checkbox", "id": "enable_autoplay", "label": "Enable Autoplay", "default": false },
+    { "type": "range", "id": "autoplay_interval", "min": 2, "max": 10, "step": 1, "unit": "s", "label": "Autoplay Interval", "default": 3 },
+    { "type": "header", "content": "💻 Desktop Settings" },
+    { "type": "range", "id": "desktop_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 4 },
+    { "type": "range", "id": "desktop_spacing", "min": 0, "max": 100, "label": "Spacing (px)", "default": 24 },
+    { "type": "checkbox", "id": "desktop_arrows", "label": "Show Arrows", "default": true },
+    { "type": "checkbox", "id": "desktop_progress_bar", "label": "Show Visual Progress Bar", "default": true },
+    { "type": "header", "content": "📱 Tablet Settings" },
+    { "type": "range", "id": "tablet_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 4 },
+    { "type": "header", "content": "📱 Mobile Settings" },
+    { "type": "range", "id": "mobile_slides", "min": 1, "max": 6, "step": 0.1, "label": "Slides per view", "default": 1.2 },
+    { "type": "range", "id": "mobile_spacing", "min": 0, "max": 50, "label": "Spacing (px)", "default": 16 },
+    { "type": "checkbox", "id": "mobile_arrows", "label": "Show Arrows", "default": false },
+    { "type": "checkbox", "id": "mobile_progress_bar", "label": "Show Visual Progress Bar", "default": true }
+  ],
+  "blocks": [
+    {
+        "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection",
+      "category": "Template"
+    }
+  ]
+}
+{% endschema %}

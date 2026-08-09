@@ -1,0 +1,375 @@
+{% assign sid = section.id %}
+
+<style>
+    /* ================= SECTION WRAPPER ================= */
+    #sleep-{{ sid }} {
+      background: {{ section.settings.section_bg }};
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+
+    /* ================= GRID ================= */
+    #sleep-{{ sid }} .sleep-grid {
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      background: {{ section.settings.content_bg }};
+      overflow: hidden;
+    }
+
+    /* ================= MEDIA ================= */
+    #sleep-{{ sid }} .sleep-media img,
+    #sleep-{{ sid }} .sleep-media video {
+      width: 100%;
+      height: 100%;
+      display: block;object-fit: cover;
+    }
+
+    #sleep-{{ sid }} .sleep-media video {
+      autoplay: true;
+    }
+
+    /* ================= CONTENT ================= */
+
+     #sleep-{{ sid }} .sleep-content .rte p {
+      color: {{ section.settings.text_color }};
+  }
+
+    #sleep-{{ sid }} .sleep-content small {
+      color: {{ section.settings.subheading_color }};
+      font-size: 17px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 20px;
+    }
+      #sleep-{{ sid }} .sleep-content h2 p{
+      color: {{ section.settings.heading_color }};
+  }
+
+    #sleep-{{ sid }} .sleep-content h2 {
+      font-size: 40px;
+      line-height: 1.2;
+      font-weight: 500;
+      margin-bottom: 24px;
+      margin-top: 0;
+    }
+
+    #sleep-{{ sid }} .sleep-content .rte {
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    #sleep-{{ sid }} .sleep-btn {
+      display: inline-block;
+      background: {{ section.settings.button_bg }};
+      color: {{ section.settings.button_text }};
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: 0.3s ease;
+          background-image: linear-gradient(45deg, black, transparent);
+              cursor: pointer;
+                  line-height: normal;
+    }
+
+
+
+
+  {% comment %} .sleep-media {
+    height: {{ section.settings.media_height_desktop }}px;
+  } {% endcomment %}
+
+  @media (max-width: 767px) {
+    {% comment %} .sleep-media {
+      height: {{ section.settings.media_height_mobile }}px;
+    } {% endcomment %}
+    #sleep-{{ sid }} .sleep-media img,
+    #sleep-{{ sid }} .sleep-media video {
+      object-fit: cover;
+    }
+  }
+
+
+
+    /* ================= DESKTOP MEDIA POSITION ================= */
+    {% if section.settings.media_position == 'right' %}
+      #sleep-{{ sid }} .sleep-media {
+        order: 2;
+      }
+    {% endif %}
+
+    /* ================= MOBILE ================= */
+@media (max-width: 767px) {
+  #sleep-{{ sid }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  #sleep-{{ sid }} .sleep-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* 🔥 TOP — media pehle */
+  {% if section.settings.mobile_media_position == 'top' %}
+    #sleep-{{ sid }} .sleep-media {
+      order: 1;
+    }
+    #sleep-{{ sid }} .sleep-content {
+      order: 2;
+    }
+  {% endif %}
+
+  /* 🔥 BOTTOM — media baad me */
+  {% if section.settings.mobile_media_position == 'bottom' %}
+    #sleep-{{ sid }} .sleep-media {
+      order: 2;
+    }
+    #sleep-{{ sid }} .sleep-content {
+      order: 1;
+    }
+  {% endif %}
+
+  #sleep-{{ sid }} .sleep-content h2 {
+    font-size: 25px;
+  }
+
+  #sleep-{{ sid }} .sleep-content h2 p {
+    margin: 0;
+  }
+}
+
+</style>
+
+<section id="sleep-{{ sid }}">
+  <div class="section">
+    <div class="sleep-grid">
+      <!-- MEDIA -->
+      <div class="sleep-media">
+
+  {% if section.settings.video != blank %}
+    {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false }}
+
+  {% elsif section.settings.image != blank %}
+
+    {% if section.settings.image_link != blank %}
+      <a href="{{ section.settings.image_link }}" class="sleep-media-link">
+    {% endif %}
+
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="Sleep Media"
+        >
+
+    {% if section.settings.image_link != blank %}
+      </a>
+    {% endif %}
+
+  {% endif %}
+
+</div>
+
+
+      <!-- CONTENT -->
+      <div class="sleep-content">
+        {% if section.settings.subheading != blank %}
+          <small>{{ section.settings.subheading }}</small>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2>{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="rte">
+            {{ section.settings.text }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="sleep-btn">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Image Text Section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "content_bg",
+      "label": "Content Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Small Heading",
+      "default": "Welcome to TheNap"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Small Heading Color",
+      "default": "#5b5bff"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "<h2>Better sleep starts here</h2>"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0b0b2e"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Content Text",
+      "default": "<p>Your sleep content goes here.</p>"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#4f4f6f"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Read more here"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#0b0b2e"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Desktop Media Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_position",
+      "label": "Mobile Media Position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+  "type": "url",
+  "id": "image_link",
+  "label": "Image Link"
+},
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "range",
+      "id": "media_height_desktop",
+      "label": "Media Height (Desktop)",
+      "min": 200,
+      "max": 900,
+      "step": 20,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "label": "Media Height (Mobile)",
+      "min": 150,
+      "max": 690,
+      "step": 20,
+      "default": 310
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (Desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (Desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (Mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Image Text Section"
+    }
+  ]
+}
+{% endschema %}

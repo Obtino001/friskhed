@@ -1,0 +1,151 @@
+{% comment %}
+  File: blocks/shipping.liquid
+  Usage: Renders the shipping-delivery snippet with customizable settings
+{% endcomment %}
+
+{%- assign block_settings = block.settings -%}
+
+<div class="shipping-block-wrapper" style="
+  padding-top: {{ block_settings.padding_top }}px;
+  padding-bottom: {{ block_settings.padding_bottom }}px;
+  padding-left: {{ block_settings.padding_left }}px;
+  padding-right: {{ block_settings.padding_right }}px;
+  width: {{ block_settings.width }};
+  {% if block_settings.alignment == 'center' %}margin: 0 auto;{% endif %}
+" {{ block.shopify_attributes }}>
+  
+  {% render 'shipping-delivery', block: block %}
+
+</div>
+<style>
+.shipping-block-wrapper{
+margin-top:-14px;
+}
+.stock-info-wrapper .status-dot {
+    display: flex;
+    background: var(--dot-color);
+    width: 8px;
+    height: 8px;
+    border-radius: 40px;
+}
+
+.stock-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.stock-info-wrapper .status-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    background: var(--dot-color);
+    border-radius: 50%;
+}
+
+/* Pulse shadow */
+.stock-info-wrapper .status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--dot-color);
+    animation: pulseShadow 1.4s ease-out infinite;
+    opacity: 0.7;
+}
+
+@keyframes pulseShadow {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+  </style>
+{% schema %}
+{
+  "name": "Shipping & Delivery",
+  "tag": null,
+  "settings": [
+ {
+          "type": "color",
+          "id": "dot_color",
+          "label": "Stock dot color",
+          "default": "#13a877"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Stock text",
+          "default": "In Stock! Get It Delivered By 5th Nov!"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Stock text color",
+          "default": "#13a877"
+        },
+        {
+          "type": "number",
+          "id": "size",
+          "label": "Stock text size",
+          "default": 12
+        },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping & Delivery"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,192 @@
+
+{%- assign block_settings = block.settings -%}
+
+
+<div class="trustpilot-wrapper" style="
+  padding-top: {{ block_settings.padding_top }}px;
+  padding-bottom: {{ block_settings.padding_bottom }}px;
+  padding-left: {{ block_settings.padding_left }}px;
+  padding-right: {{ block_settings.padding_right }}px;
+  text-align: {{ block_settings.alignment }};
+  --color-text: {{ block_settings.icon_color }};
+  --color-icon: {{ block_settings.icon_color }};
+  --font-size: {{ block_settings.font_size }}px;
+" {{ section.shopify_attributes }}>
+
+
+<a href="{{ block.settings.url }}">
+  <div class="trustpilot-container">
+    <div class="stars-row">
+      {% if block_settings.image %}
+        {{ block_settings.image | image_url: height: 18 | image_tag }}
+      {% endif %}
+      <p class="trust-text">{{ block_settings.text }}</p>
+    </div>
+  </div>
+</a>
+
+</div>
+
+<style>
+  .trustpilot-wrapper {
+    width: 100%;
+  }
+  .trustpilot-container {
+    display: flex;
+    padding-left: 1px;
+    justify-content: {% if block_settings.alignment == 'center' %}center{% elsif block_settings.alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+  }
+  .stars-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* Desktop */
+  .stars-row img {
+    height: {{ block.settings.star_size_desktop }}px;
+    width: auto;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .stars-row img {
+      height: {{ block.settings.star_size_mobile }}px;
+    }
+  }
+  .stars-row p{
+    margin: 0 0 0 0px;
+    font-size: var(--font-size);
+    color: var(--color-text);
+    line-height: 1;
+  }
+  .stars-row p strong {
+    text-decoration: underline;
+    font-weight:400 !important;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Trustpilot Icon",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "star_size_desktop",
+      "label": "Star Size (Desktop)",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "star_size_mobile",
+      "label": "Star Size (Mobile)",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>4.7 ud af 5 stjerner</p>"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon & Text Color",
+      "default": "#00b67a"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "url",
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Left Padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Right Padding",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trustpilot Icon"
+    }
+  ]
+}
+{% endschema %}

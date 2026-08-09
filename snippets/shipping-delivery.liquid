@@ -1,0 +1,10 @@
+<div class="stock-info-wrapper {% if block.settings.enable_pay %}payment__icon__active{% endif %}" style="--dot-color:{{ block.settings.dot_color }};--text-color:{{ block.settings.text_color }};--text--size:{{ block.settings.size }}px;">
+    <div class="stock-box">
+        <div class="status-dot"></div>
+        {% if block.settings.text != '' %}
+            <div class="status-text">
+                {{ block.settings.text }}
+            </div>
+        {% endif %}
+    </div>
+</div>

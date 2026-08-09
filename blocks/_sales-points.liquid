@@ -1,0 +1,227 @@
+
+
+{%- assign block_settings = block.settings -%}
+
+
+<div class="sales-points-wrapper" style="
+  padding-top: {{ block_settings.padding_top }}px;
+  padding-bottom: {{ block_settings.padding_bottom }}px;
+  padding-left: {{ block_settings.padding_left }}px;
+  padding-right: {{ block_settings.padding_right }}px;
+  width: {{ block_settings.width }};
+  {% if block_settings.alignment == 'center' %}margin: 0 auto;{% endif %}
+  --font-size: {{ block_settings.font_size }}px;
+  --text-color: {{ block_settings.text_color }};
+  --icon-size: {{ block_settings.icon_size }}px;
+" {{ block.shopify_attributes }}>
+
+  <div class="feature-container">
+    {%- capture icon_html -%}
+      {%- if block_settings.custom_icon != blank -%}
+        {{ block_settings.custom_icon | image_url: width: 80 | image_tag: loading: 'lazy', class: 'feature-icon', alt: 'Icon' }}
+      {%- else -%}
+<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 15L9.29412 20L21 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="square"></path>
+      </svg>
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {%- if block_settings.feature_1 != blank -%}
+      <div class="feature-item">
+        {{ icon_html }}
+        <div class="feature-text">{{ block_settings.feature_1 }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if block_settings.feature_2 != blank -%}
+      <div class="feature-item">
+        {{ icon_html }}
+        <div class="feature-text">{{ block_settings.feature_2 }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if block_settings.feature_3 != blank -%}
+      <div class="feature-item">
+        {{ icon_html }}
+        <div class="feature-text">{{ block_settings.feature_3 }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+
+</div>
+
+<style>
+  .sales-points-wrapper {
+    display: flex;
+    justify-content: {% if block_settings.alignment == 'center' %}center{% else %}flex-start{% endif %};
+    width: 100%;
+  }
+
+  .feature-container {
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+ .feature-item {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    gap: 15px;
+}
+
+  .feature-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    margin-right: 12px;
+    object-fit: contain; /* Keeps image aspect ratio */
+    flex-shrink: 0; 
+  }
+
+  .feature-text {
+    font-size: var(--font-size);
+    color: var(--text-color);
+    line-height: 1.4;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sales Points",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom Icon Image",
+      "info": "Upload a PNG or JPG to replace the default checkmark."
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Point 1",
+      "default": "33 dage tilfredshedsgaranti"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Point 2",
+      "default": "33 dage tilfredshedsgaranti"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Point 3",
+      "default": "33 dage tilfredshedsgaranti"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Block Width",
+      "options": [
+        { "value": "fit-content", "label": "Fit Content" },
+        { "value": "100%", "label": "Full Width" }
+      ],
+      "default": "100%"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Left Padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Right Padding",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sales Points"
+    }
+  ]
+}
+{% endschema %}
