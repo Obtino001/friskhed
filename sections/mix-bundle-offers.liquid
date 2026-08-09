@@ -12,7 +12,9 @@
   }
 {%- endstyle -%}
 
-<div class="mix-offers mix-offers-{{ section.id }}">
+{%- assign fallback_link = section.settings.collection_link | default: settings.cart_upsell_scents.url -%}
+
+<div class="mix-offers mix-offers-{{ section.id }} color-{{ section.settings.color_scheme }}">
   <div class="mix-offers__header">
     {% if section.settings.heading != blank %}
       <h2 class="mix-offers__heading">{{ section.settings.heading }}</h2>
@@ -24,7 +26,19 @@
 
   <div class="mix-offers__grid">
     {%- for block in section.blocks -%}
-      <article class="mix-offers__card{% if block.settings.featured %} is-featured{% endif %}" {{ block.shopify_attributes }}>
+      {%- liquid
+        assign card_link = block.settings.button_link | default: fallback_link
+        assign card_label = block.settings.button_label | default: 'Vælg scents'
+      -%}
+      {%- if card_link != blank -%}
+        <a
+          class="mix-offers__card{% if block.settings.featured %} is-featured{% endif %}"
+          href="{{ card_link }}"
+          {{ block.shopify_attributes }}
+        >
+      {%- else -%}
+        <article class="mix-offers__card{% if block.settings.featured %} is-featured{% endif %}" {{ block.shopify_attributes }}>
+      {%- endif -%}
         {% if block.settings.badge != blank %}
           <span class="mix-offers__badge">{{ block.settings.badge }}</span>
         {% endif %}
@@ -32,130 +46,214 @@
         {% if block.settings.price != blank %}
           <p class="mix-offers__price">{{ block.settings.price }}</p>
         {% endif %}
+        {% if block.settings.compare_at != blank %}
+          <p class="mix-offers__compare">{{ block.settings.compare_at }}</p>
+        {% endif %}
         {% if block.settings.text != blank %}
           <p class="mix-offers__text">{{ block.settings.text }}</p>
         {% endif %}
-        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
-          <a class="mix-offers__button" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+        {% if card_label != blank %}
+          <span class="button mix-offers__button{% if block.settings.featured %} mix-offers__button--on-dark{% endif %}">
+            {{ card_label }}
+          </span>
         {% endif %}
-      </article>
+      {%- if card_link != blank -%}
+        </a>
+      {%- else -%}
+        </article>
+      {%- endif -%}
     {%- endfor -%}
   </div>
 </div>
 
 {% stylesheet %}
   .mix-offers__header {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     text-align: center;
   }
 
   .mix-offers__heading {
     margin: 0 0 8px;
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-family: var(--font-heading--family, inherit);
+    font-size: clamp(1.375rem, 4vw, 2rem);
     line-height: 1.15;
     font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-foreground-heading, inherit);
   }
 
   .mix-offers__subheading {
     margin: 0 auto;
-    max-width: 40rem;
+    max-width: 36rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
     color: var(--color-foreground-muted, #555);
   }
 
   .mix-offers__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
   @media screen and (min-width: 750px) {
+    .mix-offers__header {
+      margin-bottom: 28px;
+    }
+
     .mix-offers__grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: stretch;
     }
   }
 
   .mix-offers__card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     min-height: 100%;
-    padding: 24px;
-    border-radius: 16px;
-    background: #f5f5f7;
-    border: 1px solid transparent;
+    padding: 20px;
+    border-radius: var(--style-border-radius-inputs, 12px);
+    background: rgb(var(--color-foreground-rgb, 18 18 18) / 0.05);
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid rgb(var(--color-foreground-rgb, 18 18 18) / 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  a.mix-offers__card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a.mix-offers__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 0.08);
+    border-color: rgb(var(--color-foreground-rgb, 18 18 18) / 0.18);
+  }
+
+  a.mix-offers__card:focus-visible {
+    outline: 2px solid var(--color-foreground, #121212);
+    outline-offset: 3px;
   }
 
   .mix-offers__card.is-featured {
-    background: #121212;
-    color: #fff;
+    background: var(--color-foreground-heading, #121212);
+    color: var(--color-background, #fff);
+    border-color: var(--color-foreground-heading, #121212);
+    order: -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .mix-offers__card.is-featured {
+      order: 0;
+    }
   }
 
   .mix-offers__badge {
-    display: inline-block;
+    display: inline-flex;
+    align-self: flex-start;
     margin-bottom: 12px;
-    padding: 4px 10px;
+    padding: 5px 10px;
     border-radius: 99px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     background: #13a877;
     color: #fff;
   }
 
-  .mix-offers__card.is-featured .mix-offers__badge {
-    background: #13a877;
-  }
-
   .mix-offers__title {
-    margin: 0 0 8px;
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.2;
+    margin: 0 0 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.72;
   }
 
   .mix-offers__price {
-    margin: 0 0 8px;
-    font-size: 1.75rem;
+    margin: 0 0 4px;
+    font-size: clamp(1.5rem, 5vw, 1.875rem);
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+  }
+
+  .mix-offers__compare {
+    margin: 0 0 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #13a877;
+  }
+
+  .mix-offers__card.is-featured .mix-offers__compare {
+    color: #7ddeb8;
   }
 
   .mix-offers__text {
-    margin: 0 0 20px;
-    font-size: 0.9375rem;
-    line-height: 1.4;
-    color: inherit;
-    opacity: 0.8;
+    margin: 0 0 16px;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    opacity: 0.78;
   }
 
   .mix-offers__button {
     margin-top: auto;
-    display: inline-flex;
-    align-items: center;
+    width: 100%;
     justify-content: center;
-    min-height: 44px;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: 1px solid #121212;
-    background: transparent;
+    pointer-events: none;
+  }
+
+  .mix-offers__button--on-dark {
+    --button-color: #121212;
+    --button-background-color: #fff;
+    --button-border-color: #fff;
     color: #121212;
-    font-weight: 600;
-    text-decoration: none;
+    background-color: #fff;
+    box-shadow: none;
   }
 
-  .mix-offers__card.is-featured .mix-offers__button {
-    border-color: #fff;
-    color: #fff;
-  }
+  @media screen and (max-width: 749px) {
+    .mix-offers__card {
+      padding: 16px 16px 14px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: 10px;
+    }
 
-  .mix-offers__button:hover {
-    background: #121212;
-    color: #fff;
-  }
+    .mix-offers__badge {
+      margin-bottom: 8px;
+      width: 100%;
+    }
 
-  .mix-offers__card.is-featured .mix-offers__button:hover {
-    background: #fff;
-    color: #121212;
+    .mix-offers__title {
+      margin: 0;
+      width: auto;
+    }
+
+    .mix-offers__price {
+      margin: 0 0 0 auto;
+      font-size: 1.375rem;
+    }
+
+    .mix-offers__compare,
+    .mix-offers__text {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .mix-offers__text {
+      margin-top: 2px;
+      margin-bottom: 12px;
+    }
+
+    .mix-offers__button {
+      min-height: 44px;
+    }
   }
 {% endstylesheet %}
 
@@ -167,6 +265,12 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
       "type": "text",
       "id": "heading",
       "label": "Heading",
@@ -177,6 +281,12 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Saml dine scents og spar. Gratis fragt over 149 kr."
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Default collection link",
+      "info": "Used when a card has no own link. Typically aroma-kugler."
     },
     {
       "type": "range",
@@ -207,6 +317,7 @@
         { "type": "text", "id": "badge", "label": "Badge" },
         { "type": "text", "id": "title", "label": "Title", "default": "3-pack" },
         { "type": "text", "id": "price", "label": "Price", "default": "49 kr" },
+        { "type": "text", "id": "compare_at", "label": "Savings line", "default": "Spar vs 59,97 kr" },
         { "type": "textarea", "id": "text", "label": "Text", "default": "Mix 3 aroma-kugler" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Vælg scents" },
         { "type": "url", "id": "button_link", "label": "Button link" },
@@ -224,7 +335,8 @@
             "badge": "Mest populær",
             "title": "3-pack",
             "price": "49 kr",
-            "text": "Mix 3 aroma-kugler. Automatisk rabat i kurven.",
+            "compare_at": "Spar 11 kr",
+            "text": "Mix 3 aroma-kugler. Rabatten trækkes automatisk i kurven.",
             "button_label": "Vælg 3 scents",
             "featured": true
           }
@@ -234,6 +346,7 @@
           "settings": {
             "title": "5-pack",
             "price": "75 kr",
+            "compare_at": "Spar 25 kr",
             "text": "Mix 5 aroma-kugler og spar mere.",
             "button_label": "Vælg 5 scents"
           }
@@ -243,8 +356,9 @@
           "settings": {
             "title": "Starter kit",
             "price": "Kugler + applikator",
-            "text": "Aroma-kugler plus classic eller color applikator — vælg én.",
-            "button_label": "Se applikator"
+            "compare_at": "",
+            "text": "Vælg dine kugler — tilføj classic eller color applikator.",
+            "button_label": "Vælg scents"
           }
         }
       ]

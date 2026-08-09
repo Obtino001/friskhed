@@ -139,9 +139,10 @@
             "badge": "Mest populær",
             "title": "3-pack",
             "price": "49 kr",
-            "text": "Mix 3 aroma-kugler. Automatisk rabat i kurven.",
+            "compare_at": "Spar 11 kr",
+            "text": "Mix 3 aroma-kugler. Rabatten trækkes automatisk i kurven.",
             "button_label": "Vælg 3 scents",
-            "button_link": "",
+            "button_link": "shopify://collections/aroma-kugler",
             "featured": true
           }
         },
@@ -151,9 +152,10 @@
             "badge": "",
             "title": "5-pack",
             "price": "75 kr",
+            "compare_at": "Spar 25 kr",
             "text": "Mix 5 aroma-kugler og spar mere.",
             "button_label": "Vælg 5 scents",
-            "button_link": "",
+            "button_link": "shopify://collections/aroma-kugler",
             "featured": false
           }
         },
@@ -163,9 +165,10 @@
             "badge": "",
             "title": "Starter kit",
             "price": "Kugler + applikator",
-            "text": "Aroma-kugler plus classic eller color applikator — vælg én.",
-            "button_label": "Se applikator",
-            "button_link": "shopify://products/aroma-kugle-dispenser",
+            "compare_at": "",
+            "text": "Vælg dine kugler — tilføj classic eller color applikator i kurven.",
+            "button_label": "Vælg scents",
+            "button_link": "shopify://collections/aroma-kugler",
             "featured": false
           }
         }
@@ -179,6 +182,7 @@
       "settings": {
         "heading": "Mix dine favoritter",
         "subheading": "Saml dine scents og spar. Gratis fragt over 149 kr.",
+        "collection_link": "shopify://collections/aroma-kugler",
         "padding_top": 40,
         "padding_bottom": 40
       }
