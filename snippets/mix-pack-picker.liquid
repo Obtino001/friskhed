@@ -10,6 +10,24 @@
     assign price_5 = settings.mix_pack_5_price | default: '75'
   -%}
 
+  <script>
+    (function () {
+      if (!new URLSearchParams(location.search).get('mix')) return;
+      document.documentElement.dataset.mixPicker = 'on';
+      document.addEventListener(
+        'click',
+        function (event) {
+          var target = event.target;
+          if (!(target instanceof Element)) return;
+          if (target.closest('mix-pack-picker')) return;
+          if (target.closest('a.product-card__link, product-card-link, product-card, .product-grid__item[data-variant-id]')) {
+            event.preventDefault();
+          }
+        },
+        true
+      );
+    })();
+  </script>
   <script src="{{ 'mix-pack-picker.js' | asset_url }}" type="module"></script>
 
   <mix-pack-picker
@@ -175,11 +193,16 @@
     margin: 0;
   }
 
+  html[data-mix-picker='on'] a.product-card__link {
+    pointer-events: none;
+  }
+
   body[data-mix-picker='on'] {
     padding-bottom: 140px;
   }
 
-  body[data-mix-picker='on'] .product-grid__item {
+  body[data-mix-picker='on'] .product-grid__item,
+  body[data-mix-picker='on'] product-card {
     cursor: pointer;
   }
 

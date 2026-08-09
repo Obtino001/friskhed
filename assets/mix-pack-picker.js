@@ -8,14 +8,20 @@ class MixPackPicker extends HTMLElement {
   #price3 = '49';
   #price5 = '75';
   #target = 3;
+  /** @type {MutationObserver | null} */
+  #observer = null;
 
   connectedCallback() {
-    const params = new URLSearchParams(window.location.search);
-    const mix = params.get('mix') || '';
+    const mix = new URLSearchParams(window.location.search).get('mix') || '';
     if (!mix) return;
 
-    document.body.appendChild(this);
+    if (this.parentElement !== document.body) {
+      document.body.appendChild(this);
+      return;
+    }
+
     this.hidden = false;
+    document.documentElement.dataset.mixPicker = 'on';
     document.body.dataset.mixPicker = 'on';
 
     this.#qty3 = Number(this.dataset.qty3) || 3;
@@ -30,14 +36,28 @@ class MixPackPicker extends HTMLElement {
       if (appCheck instanceof HTMLInputElement) appCheck.checked = true;
     }
 
+    this.#disableCardLinks();
     this.#bind();
     this.#syncTargetInputs();
     this.#render();
   }
 
   disconnectedCallback() {
+    if (this.parentElement === document.body) return;
+    document.documentElement.removeAttribute('data-mix-picker');
     document.body.removeAttribute('data-mix-picker');
     document.removeEventListener('click', this.#onGridClick, true);
+    this.#observer?.disconnect();
+  }
+
+  #disableCardLinks() {
+    document.querySelectorAll('a.product-card__link').forEach((anchor) => {
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+      if (!anchor.hasAttribute('href')) return;
+      anchor.dataset.mixHref = anchor.getAttribute('href') || '';
+      anchor.removeAttribute('href');
+      anchor.setAttribute('role', 'button');
+    });
   }
 
   #bind() {
@@ -56,28 +76,44 @@ class MixPackPicker extends HTMLElement {
 
     this.querySelector('[data-mix-submit]')?.addEventListener('click', () => this.#submit());
     document.addEventListener('click', this.#onGridClick, true);
+
+    const grid = document.getElementById('ResultsList');
+    if (grid) {
+      this.#observer = new MutationObserver(() => this.#disableCardLinks());
+      this.#observer.observe(grid, { childList: true, subtree: true });
+    }
   }
 
   /** @param {MouseEvent} event */
   #onGridClick = (event) => {
     if (document.body.dataset.mixPicker !== 'on') return;
     if (!(event.target instanceof Element)) return;
-    if (event.target.closest('mix-pack-picker, .mix-pick')) return;
+    if (event.target.closest('mix-pack-picker')) return;
+    if (event.target.closest('header-component, .header, cart-drawer-component, nav')) return;
 
-    const item = event.target.closest('.product-grid__item');
+    const item = event.target.closest('.product-grid__item[data-variant-id], product-card, product-card-link');
     if (!item) return;
 
-    const variantId = item.getAttribute('data-variant-id');
-    if (!variantId || item.getAttribute('data-available') === 'false') return;
+    const card = item.closest('.product-grid__item[data-variant-id]') || item;
+    const variantId = card.getAttribute('data-variant-id') || card.querySelector('[data-variant-id]')?.getAttribute('data-variant-id');
+    const row =
+      card.matches?.('.product-grid__item')
+        ? card
+        : card.closest('.product-grid__item') || document.querySelector(`.product-grid__item[data-variant-id="${variantId || ''}"]`);
+
+    if (!row) return;
+    if (row.getAttribute('data-available') === 'false') return;
 
     event.preventDefault();
     event.stopPropagation();
-    this.#toggle(item);
+    event.stopImmediatePropagation();
+    this.#toggle(row);
   };
 
   /** @param {Element} item */
   #toggle(item) {
     const id = item.getAttribute('data-variant-id') || '';
+    if (!id) return;
     if (this.#selected.has(id)) this.#deselect(id);
     else this.#select(item);
     this.#render();
@@ -138,7 +174,9 @@ class MixPackPicker extends HTMLElement {
     if (targetEl) targetEl.textContent = String(this.#target);
     if (status) {
       status.textContent =
-        count >= this.#target ? 'Klar — læg i kurv' : `Klik på ${this.#target - count} scent${this.#target - count === 1 ? '' : 's'} mere`;
+        count >= this.#target
+          ? 'Klar — læg i kurv'
+          : `Klik på ${this.#target - count} scent${this.#target - count === 1 ? '' : 's'} mere`;
     }
     if (submit instanceof HTMLButtonElement) {
       submit.disabled = count < this.#target;
