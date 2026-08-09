@@ -126,7 +126,17 @@
                         id="HeaderDrawer-{{ link.handle }}"
                         class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
                       >
-                        <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
+                        {%- if link.url != blank and link.url != '#' -%}
+                          <a
+                            class="menu-drawer__menu-item-text wrap-text menu-drawer__summary-link"
+                            href="{{ link.url }}"
+                            data-menu-summary-link
+                          >
+                            {{- link.title | escape -}}
+                          </a>
+                        {%- else -%}
+                          <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
+                        {%- endif -%}
                         <span class="svg-wrapper icon-plus">
                           {{- 'icon-plus.svg' | inline_asset_content -}}
                         </span>
@@ -372,9 +382,19 @@
                                         id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
                                         class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset"
                                       >
-                                        <span class="menu-drawer__menu-item-text wrap-text">
-                                          {{- childlink.title | escape -}}
-                                        </span>
+                                        {%- if childlink.url != blank and childlink.url != '#' -%}
+                                          <a
+                                            class="menu-drawer__menu-item-text wrap-text menu-drawer__summary-link"
+                                            href="{{ childlink.url }}"
+                                            data-menu-summary-link
+                                          >
+                                            {{- childlink.title | escape -}}
+                                          </a>
+                                        {%- else -%}
+                                          <span class="menu-drawer__menu-item-text wrap-text">
+                                            {{- childlink.title | escape -}}
+                                          </span>
+                                        {%- endif -%}
                                         <span class="svg-wrapper icon-plus">
                                           {{- 'icon-plus.svg' | inline_asset_content -}}
                                         </span>
@@ -650,6 +670,23 @@
   </details>
 </header-drawer>
 
+<script>
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (!(event.target instanceof Element)) return;
+      const link = event.target.closest('[data-menu-summary-link]');
+      if (!(link instanceof HTMLAnchorElement) || !link.closest('summary')) return;
+
+      // Keep the accordion closed and follow the link instead of toggling it
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.href = link.href;
+    },
+    true
+  );
+</script>
+
 {% stylesheet %}
   .header__icon--menu {
     position: initial;
@@ -695,6 +732,19 @@
     @media screen and (min-width: 750px) {
       margin-top: var(--drawer-header-desktop-top);
     }
+  }
+
+  /* Title inside an accordion row navigates, the plus icon toggles */
+  a.menu-drawer__summary-link {
+    flex: 1;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  summary:has(> a.menu-drawer__summary-link) .icon-plus {
+    box-sizing: content-box;
+    padding: 10px;
+    margin-inline-end: -10px;
   }
 
   details:not([open]) .header__icon--menu .header-drawer-icon--close {

@@ -39,7 +39,7 @@ Legal identity in theme: **Friskhed.dk ApS · CVR 43519379 · Lunikvej 20b, 2670
 | Welcome popup | 10% email | Removed | Snippet popup, theme setting on | **Done** |
 | Hero | Static, instant | Video, blank LCP | Static image + menthol H1 | **Done** |
 | Product cards | Hero story + KØB NU | Badge noise, dup carousels, sold-out Tilføj | Fast Selling off; carousels still on 2 HP lists; quick-add Tilføj still shows sold-out | **Partial** |
-| PDP reviews | None | Stars (wrong number) | 4,9 / 469 + 3 stacked quotes | **Done** (quotes not DJ/Ole/Lisa P) |
+| PDP reviews | None | Stars (wrong number) | 4,9 / 469 + quote carousel (DJ, Ole, Camilla) | **Done** |
 | Sticky ATC | None | Yes | Yes | **Keep** |
 | Cart progress | Standard | Bar (threshold wasted at 450) | Bar at 149 + mix nudge + upsell | **Done (theme)** |
 | Breadcrumbs | None | Yes | Yes | **Keep** |
@@ -68,11 +68,11 @@ Sales points: gratis fragt 149, levering 1–3, Trustpilot. Shipping line: på l
 | Hide sold-out quick-add Tilføj | **Open** |
 | Deduplicate nested / mobile carousels | **Open** (`carousel_on_mobile: true` on two homepage featured collections) |
 
-### 5. PDP review quotes — **Done (theme) / A/B still optional**
-Stacked quotes (not carousel). Current authors: Jan, Inge Nielsen, Camilla. Obtino suggested DJ, Ole, Lisa P verbatim — swap in editor if client wants those exact quotes.
+### 5. PDP review quotes — **Done**
+Swipeable carousel (dots, arrows on desktop, 6s auto-rotate) inside the buy box, above ATC. Authors: DJ, Ole (verbatim from Trustpilot), Camilla. Ole’s quote is the fully legible part only — paste his full sentence to complete it. Third slot can become Lisa P; peter nielsen’s 5-star review was skipped because its text mentions a one-week delivery and switching carrier, which contradicts *Levering 1–3 hverdage*.
 
 ### 6. Hero static + customer language — **Done (theme) / A/B optional**
-Static image. H1: *Den mentholsmag du mangler*. Sub: aroma-kugler + 4,9 / 469. Tobacco wording left as brand/legal decision.
+Static image. H1: *Den friske menthol-smag du savner* (Obtino wording). Sub: aroma-kugler + 4,9 / 469. Tobacco wording left as brand/legal decision.
 
 ### 7. Menthol strength guide — **Theme done / metafields admin**
 PDP block `custom.menthol_strength` 1–5. Collection cards do not show the scale yet.
