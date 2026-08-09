@@ -138,7 +138,7 @@
           "settings": {
             "menu": "main-menu",
             "color_scheme": "",
-            "type_font_primary_size": "1rem",
+            "type_font_primary_size": "1.0625rem",
             "menu_font_style": "inverse",
             "type_font_primary_link": "body",
             "type_case_primary_link": "none",
@@ -175,7 +175,7 @@
         "localization_position": "right",
         "localization_row": "top",
         "section_width": "page-width",
-        "section_height": "compact",
+        "section_height": "standard",
         "enable_sticky_header": "always",
         "divider_width": 0,
         "divider_size": "page-width",
