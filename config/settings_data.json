@@ -120,18 +120,9 @@
     "variant_button_width": "equal-width-buttons",
     "free_shipping_text": "fri fragt",
     "free_gift_minimum": "50000",
-    "content_for_index": [],
     "sections": {
       "trust-announcement-bar": {
         "type": "trust-announcement-bar",
-        "settings": {
-          "bg_color": "#111111",
-          "text_color": "#ffffff",
-          "icon_color": "#13a877",
-          "phone_text": "",
-          "phone_url": "",
-          "marquee_speed": 22
-        },
         "blocks": {
           "usp_trustpilot": {
             "type": "usp",
@@ -139,7 +130,7 @@
               "use_trustpilot": true,
               "text": "4,9 på Trustpilot · 469 anmeldelser",
               "link": "https://dk.trustpilot.com/review/friskhed.dk",
-              "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.8 7.2 18.4l.9-5.4L4.2 9.2l5.4-.8L12 3.5Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path></svg>"
+              "icon": "<svg viewbox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.8 7.2 18.4l.9-5.4L4.2 9.2l5.4-.8L12 3.5Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path></svg>"
             }
           },
           "usp_shipping": {
@@ -148,7 +139,7 @@
               "use_trustpilot": false,
               "text": "Gratis fragt over 149 kr",
               "link": "",
-              "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M3.5 7H14v9H3.5V7Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path><path d=\"M14 10h3.6l2.9 3v3H14v-6Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path><circle cx=\"7.2\" cy=\"17.2\" r=\"1.8\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle><circle cx=\"17.3\" cy=\"17.2\" r=\"1.8\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle></svg>"
+              "icon": "<svg viewbox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M3.5 7H14v9H3.5V7Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path><path d=\"M14 10h3.6l2.9 3v3H14v-6Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path><circle cx=\"7.2\" cy=\"17.2\" r=\"1.8\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle><circle cx=\"17.3\" cy=\"17.2\" r=\"1.8\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle></svg>"
             }
           },
           "usp_delivery": {
@@ -157,7 +148,7 @@
               "use_trustpilot": false,
               "text": "Levering inden for 1–3 hverdage",
               "link": "",
-              "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.2\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle><path d=\"M12 7.8V12l3 2\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>"
+              "icon": "<svg viewbox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.2\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle><path d=\"M12 7.8V12l3 2\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>"
             }
           },
           "usp_cutoff": {
@@ -166,7 +157,7 @@
               "use_trustpilot": false,
               "text": "Bestil før 15:00, sendes i dag",
               "link": "",
-              "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3.5l7 3v5.2c0 4.2-2.8 7.8-7 9.4-4.2-1.6-7-5.2-7-9.4V6.5l7-3Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path></svg>"
+              "icon": "<svg viewbox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3.5l7 3v5.2c0 4.2-2.8 7.8-7 9.4-4.2-1.6-7-5.2-7-9.4V6.5l7-3Z\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\"></path></svg>"
             }
           }
         },
@@ -175,9 +166,18 @@
           "usp_shipping",
           "usp_delivery",
           "usp_cutoff"
-        ]
+        ],
+        "settings": {
+          "bg_color": "#111111",
+          "text_color": "#ffffff",
+          "icon_color": "#13a877",
+          "phone_text": "",
+          "phone_url": "",
+          "marquee_speed": 22
+        }
       }
     },
+    "content_for_index": [],
     "blocks": {
       "8746983209849429782": {
         "type": "shopify://apps/dealeasy/blocks/app-embed/e47a8634-0496-480d-9e46-6f7fafd34b30",
