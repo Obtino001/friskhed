@@ -273,6 +273,12 @@
               },
               "blocks": {}
             },
+            "pdp_upsell_JM9cdX": {
+              "type": "_pdp-upsell",
+              "name": "PDP complete order",
+              "settings": {},
+              "blocks": {}
+            },
             "accordion_FYWXJn": {
               "type": "accordion",
               "name": "t:names.accordion",
@@ -417,31 +423,6 @@
                 "accordion_row_Mpc9Ch",
                 "accordion_row_MDn4X6"
               ]
-            },
-            "strength_guide_pdp": {
-              "type": "_strength-guide",
-              "name": "Menthol strength guide",
-              "settings": {},
-              "blocks": {}
-            },
-            "mix_pack_pdp": {
-              "type": "_mix-pack-offer",
-              "name": "Mix pack offer",
-              "settings": {},
-              "blocks": {}
-            },
-            "pdp_quotes_pdp": {
-              "type": "_pdp-review-quotes",
-              "name": "PDP review quotes",
-              "settings": {
-                "author_1": "Jan",
-                "quote_1": "Som sædvanlig hurtig levering, kan kun anbefale Friskhed",
-                "author_2": "Inge Nielsen",
-                "quote_2": "Fantastisk produkt. Endnu mere fantastisk service og lynhurtig levering",
-                "author_3": "Camilla",
-                "quote_3": "Altid hurtig modtagelse af vare. Og super kundeservice"
-              },
-              "blocks": {}
             }
           },
           "block_order": [
@@ -456,6 +437,8 @@
             "pdp_quotes_pdp",
             "shipping_7bHfGn",
             "buy_buttons_eYQEYi",
+            "payment_icons_4GPxAT",
+            "pdp_upsell_JM9cdX",
             "accordion_FYWXJn"
           ]
         }
