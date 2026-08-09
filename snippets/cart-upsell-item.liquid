@@ -1,0 +1,37 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign form_id = 'CartUpsell-ProductForm-' | append: product.id | append: '-' | append: section.id
+  assign button_id = 'CartUpsell-Submit-' | append: product.id
+  assign add_label = 'actions.add' | t
+-%}
+
+<div class="cart-upsell__row">
+  {% if product.featured_image %}
+    {{ product.featured_image | image_url: width: 96 | image_tag: alt: product.title, loading: 'lazy' }}
+  {% endif %}
+  <div class="cart-upsell__meta">
+    <span class="cart-upsell__title">{{ product.title }}</span>
+    <span class="cart-upsell__price">{{ variant.price | money }}</span>
+  </div>
+
+  <product-form-component
+    class="cart-upsell__form"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product.id }}"
+    data-quantity-default="1"
+    on:submit="/handleSubmit"
+  >
+    <div class="visually-hidden" aria-live="assertive" role="status" aria-atomic="true" ref="liveRegion"></div>
+    {%- form 'product', product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form', class: 'cart-upsell__form' -%}
+      <input type="hidden" name="id" ref="variantId" value="{{ variant.id }}">
+      <input type="hidden" name="quantity" value="1">
+      {% render 'add-to-cart-button',
+        id: button_id,
+        class: 'button add-to-cart-button',
+        can_add_to_cart: variant.available,
+        product: product,
+        add_to_cart_text: add_label
+      %}
+    {%- endform -%}
+  </product-form-component>
+</div>

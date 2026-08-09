@@ -28,56 +28,32 @@
 {% if show_applicator or upsell_product %}
   <div class="cart-upsell">
     <p class="cart-upsell__heading">Gør ordren komplet</p>
+
     {% if show_applicator %}
-      <div class="cart-upsell__row">
-        {% if applicator.featured_image %}
-          {{ applicator.featured_image | image_url: width: 96 | image_tag: alt: applicator.title, loading: 'lazy' }}
-        {% endif %}
-        <div class="cart-upsell__meta">
-          <span class="cart-upsell__title">{{ applicator.title }}</span>
-          <span class="cart-upsell__price">{{ applicator.price | money }}</span>
-        </div>
-        <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">
-          <input type="hidden" name="id" value="{{ applicator.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1">
-          <button type="submit" class="button button-secondary">Tilføj</button>
-        </form>
-      </div>
+      {% render 'cart-upsell-item', product: applicator, section: section %}
     {% endif %}
+
     {% if upsell_product %}
-      <div class="cart-upsell__row">
-        {% if upsell_product.featured_image %}
-          {{ upsell_product.featured_image | image_url: width: 96 | image_tag: alt: upsell_product.title, loading: 'lazy' }}
-        {% endif %}
-        <div class="cart-upsell__meta">
-          <span class="cart-upsell__title">{{ upsell_product.title }}</span>
-          <span class="cart-upsell__price">{{ upsell_product.price | money }}</span>
-        </div>
-        <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">
-          <input type="hidden" name="id" value="{{ upsell_product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1">
-          <button type="submit" class="button button-secondary">Tilføj</button>
-        </form>
-      </div>
+      {% render 'cart-upsell-item', product: upsell_product, section: section %}
     {% endif %}
   </div>
 {% endif %}
 
 {% stylesheet %}
   .cart-upsell {
-    padding: 12px 24px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px 24px 16px;
+    border-top: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
   }
 
   .cart-upsell__heading {
-    margin: 0 0 10px;
+    margin: 0 0 12px;
     font-size: 0.875rem;
     font-weight: 600;
   }
 
   .cart-upsell__row {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
     gap: 10px;
     align-items: center;
     margin-bottom: 10px;
@@ -87,7 +63,7 @@
     width: 48px;
     height: 48px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: var(--style-border-radius-inputs, 6px);
   }
 
   .cart-upsell__meta {
@@ -108,8 +84,15 @@
     font-size: 0.75rem;
   }
 
-  .cart-upsell .button {
-    font-size: 0.75rem;
-    padding: 6px 10px;
+  .cart-upsell__form,
+  .cart-upsell__form .product-form-buttons,
+  .cart-upsell__form product-form-component {
+    display: contents;
+  }
+
+  .cart-upsell .add-to-cart-button {
+    min-height: var(--height-buy-buttons, 44px);
+    padding-inline: 16px;
+    white-space: nowrap;
   }
 {% endstylesheet %}
