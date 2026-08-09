@@ -59,8 +59,24 @@
             class="product-grid__item product-grid__item--{{ forloop.index0 }}"
             data-page="{{ paginate.current_page }}"
             data-product-id="{{ product.id }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            data-product-title="{{ product.title | escape }}"
+            data-product-image="{{ product.featured_image | image_url: width: 120 }}"
+            data-available="{% if product.available %}true{% else %}false{% endif %}"
             ref="cards[]"
           >
+            <label class="mix-pick-toggle">
+              <input
+                type="checkbox"
+                class="mix-pick-toggle__input"
+                data-mix-select
+                {% unless product.available %}
+                  disabled
+                {% endunless %}
+              >
+              <span class="mix-pick-toggle__mark"></span>
+              <span class="visually-hidden">Vælg {{ product.title }}</span>
+            </label>
             {% # theme-check-disable %}
             {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
             {% # theme-check-enable %}
@@ -78,6 +94,8 @@
     {% endpaginate %}
   </div>
 </results-list>
+
+{% render 'mix-pack-picker' %}
 
 {% stylesheet %}
   .main-collection-grid {

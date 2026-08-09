@@ -142,7 +142,7 @@
             "compare_at": "Spar 11 kr",
             "text": "Mix 3 aroma-kugler. Rabatten trækkes automatisk i kurven.",
             "button_label": "Vælg 3 scents",
-            "button_link": "shopify://collections/aroma-kugler",
+            "button_link": "/collections/aroma-kugler?mix=3",
             "featured": true
           }
         },
@@ -155,7 +155,7 @@
             "compare_at": "Spar 25 kr",
             "text": "Mix 5 aroma-kugler og spar mere.",
             "button_label": "Vælg 5 scents",
-            "button_link": "shopify://collections/aroma-kugler",
+            "button_link": "/collections/aroma-kugler?mix=5",
             "featured": false
           }
         },
@@ -168,7 +168,7 @@
             "compare_at": "",
             "text": "Vælg dine kugler — tilføj classic eller color applikator i kurven.",
             "button_label": "Vælg scents",
-            "button_link": "shopify://collections/aroma-kugler",
+            "button_link": "/collections/aroma-kugler?mix=starter",
             "featured": false
           }
         }

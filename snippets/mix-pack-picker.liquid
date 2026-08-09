@@ -1,0 +1,230 @@
+{%- if settings.mix_pack_enable -%}
+  {%- liquid
+    assign app = settings.cart_upsell_applicator
+    assign app_alt = settings.cart_upsell_applicator_alt
+    assign app_variant = app.selected_or_first_available_variant
+    assign app_alt_variant = app_alt.selected_or_first_available_variant
+    assign qty_3 = settings.mix_pack_3_qty | default: 3
+    assign qty_5 = settings.mix_pack_5_qty | default: 5
+    assign price_3 = settings.mix_pack_3_price | default: '49'
+    assign price_5 = settings.mix_pack_5_price | default: '75'
+  -%}
+
+  <script src="{{ 'mix-pack-picker.js' | asset_url }}" type="module"></script>
+
+  <mix-pack-picker
+    class="mix-pick"
+    hidden
+    data-qty-3="{{ qty_3 }}"
+    data-qty-5="{{ qty_5 }}"
+    data-price-3="{{ price_3 }}"
+    data-price-5="{{ price_5 }}"
+    data-app-id="{{ app_variant.id }}"
+    data-collection="{{ collection.handle }}"
+    data-scent-collection="{{ settings.cart_upsell_scents.handle }}"
+  >
+    <div class="mix-pick__inner">
+      <div class="mix-pick__modes" role="radiogroup" aria-label="Vælg mix">
+        <label class="mix-pick__mode">
+          <input type="radio" name="mix-target" data-mix-target value="{{ qty_3 }}" checked>
+          <span>{{ qty_3 }}-pack · {{ price_3 }} kr</span>
+        </label>
+        <label class="mix-pick__mode">
+          <input type="radio" name="mix-target" data-mix-target value="{{ qty_5 }}">
+          <span>{{ qty_5 }}-pack · {{ price_5 }} kr</span>
+        </label>
+      </div>
+
+      {% if app != blank or app_alt != blank %}
+        <label class="mix-pick__app">
+          <input type="checkbox" data-mix-app>
+          <span>Tilføj applikator</span>
+        </label>
+        <div class="mix-pick__app-types" data-mix-app-types hidden>
+          {% if app != blank and app_variant.available %}
+            <label class="mix-pick__mode">
+              <input type="radio" name="mix-app-type" data-mix-app-type value="{{ app_variant.id }}" checked>
+              <span>{{ app.title }}</span>
+            </label>
+          {% endif %}
+          {% if app_alt != blank and app_alt_variant.available %}
+            <label class="mix-pick__mode">
+              <input
+                type="radio"
+                name="mix-app-type"
+                data-mix-app-type
+                value="{{ app_alt_variant.id }}"
+                {% if app == blank %}
+                  checked
+                {% endif %}
+              >
+              <span>{{ app_alt.title }}</span>
+            </label>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <p class="mix-pick__progress">
+        <span data-mix-count>0</span>/<span data-mix-target-label>{{ qty_3 }}</span>
+        ·
+        <span data-mix-status>Vælg dine scents</span>
+      </p>
+      <div class="mix-pick__chips" data-mix-chips></div>
+      <button type="button" class="button mix-pick__submit" data-mix-submit disabled>
+        Læg {{ qty_3 }} i kurv · {{ price_3 }} kr
+      </button>
+    </div>
+  </mix-pack-picker>
+{%- endif -%}
+
+{% stylesheet %}
+  .mix-pick {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin-top: 16px;
+    background: #fff;
+    border-top: 1px solid rgb(0 0 0 / 0.1);
+    box-shadow: 0 -8px 24px rgb(0 0 0 / 0.08);
+  }
+
+  .mix-pick__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    padding: 12px 16px 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .mix-pick__inner {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      align-items: center;
+      gap: 12px 20px;
+      padding: 14px 24px;
+    }
+
+    .mix-pick__chips {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .mix-pick__modes,
+  .mix-pick__app-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mix-pick__mode,
+  .mix-pick__app {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 6px 12px;
+    border: 1px solid rgb(0 0 0 / 0.15);
+    border-radius: 99px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .mix-pick__mode:has(input:checked),
+  .mix-pick__app:has(input:checked) {
+    background: #121212;
+    color: #fff;
+    border-color: #121212;
+  }
+
+  .mix-pick__progress {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .mix-pick__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .mix-pick__chip {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #f3faf7;
+    font-size: 0.75rem;
+  }
+
+  .mix-pick__submit {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .mix-pick__submit {
+      width: auto;
+      min-width: 220px;
+    }
+  }
+
+  body[data-mix-picker='on'] .product-grid__item {
+    position: relative;
+  }
+
+  body[data-mix-picker='on'] .mix-pick-toggle {
+    display: flex;
+  }
+
+  .mix-pick-toggle {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 4;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #fff;
+    border: 2px solid #121212;
+    cursor: pointer;
+  }
+
+  .product-grid__item.is-mix-selected .mix-pick-toggle {
+    background: #13a877;
+    border-color: #13a877;
+  }
+
+  .mix-pick-toggle__input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .mix-pick-toggle__mark {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .product-grid__item.is-mix-selected .mix-pick-toggle__mark {
+    background: #fff;
+  }
+
+  .product-grid__item.is-mix-selected .product-card {
+    outline: 2px solid #13a877;
+    outline-offset: 2px;
+  }
+
+  .product-grid__item.is-mix-locked {
+    opacity: 0.45;
+  }
+{% endstylesheet %}
