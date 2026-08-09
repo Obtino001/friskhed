@@ -67,6 +67,64 @@
         "label": "Trustpilot URL"
       },
       {
+        "type": "paragraph",
+        "content": "Reviews shown in the menu drawer slider. Use real Trustpilot reviews only."
+      },
+      {
+        "type": "text",
+        "id": "tp_review_1_author",
+        "label": "Review 1 author",
+        "default": "Jan"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_1_headline",
+        "label": "Review 1 headline",
+        "default": "Som sædvanlig hurtig levering"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_1_text",
+        "label": "Review 1 text",
+        "default": "Som sædvanlig hurtig levering, kan kun anbefale Friskhed"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_2_author",
+        "label": "Review 2 author",
+        "default": "Inge Nielsen"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_2_headline",
+        "label": "Review 2 headline",
+        "default": "Fantastisk produkt"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_2_text",
+        "label": "Review 2 text",
+        "default": "Endnu mere fantastisk service og lynhurtig levering"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_3_author",
+        "label": "Review 3 author",
+        "default": "John Pedersen"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_3_headline",
+        "label": "Review 3 headline",
+        "default": "Som altid super gode produkter"
+      },
+      {
+        "type": "text",
+        "id": "tp_review_3_text",
+        "label": "Review 3 text",
+        "default": "Som altid super gode produkter, samt hurtig levering."
+      },
+      {
         "type": "header",
         "content": "Delivery promise"
       },
