@@ -130,11 +130,10 @@
         "padding-block-end": 72
       }
     },
-    "mix_bundle_offers": {
+    "mix_bundle_offers_CGGnn4": {
       "type": "mix-bundle-offers",
-      "name": "Mix bundle offers",
       "blocks": {
-        "offer_3pack": {
+        "offer_pdtNbx": {
           "type": "offer",
           "settings": {
             "badge": "Mest populær",
@@ -142,23 +141,23 @@
             "price": "49 kr",
             "text": "Mix 3 aroma-kugler. Automatisk rabat i kurven.",
             "button_label": "Vælg 3 scents",
-            "button_link": "shopify://collections/aroma-kugler",
+            "button_link": "",
             "featured": true
           }
         },
-        "offer_5pack": {
+        "offer_NeeUJY": {
           "type": "offer",
           "settings": {
-            "badge": "Bedst værdi",
+            "badge": "",
             "title": "5-pack",
             "price": "75 kr",
             "text": "Mix 5 aroma-kugler og spar mere.",
             "button_label": "Vælg 5 scents",
-            "button_link": "shopify://collections/aroma-kugler",
+            "button_link": "",
             "featured": false
           }
         },
-        "offer_starter": {
+        "offer_LkpxRR": {
           "type": "offer",
           "settings": {
             "badge": "",
@@ -166,21 +165,22 @@
             "price": "Kugler + applikator",
             "text": "Aroma-kugler plus dispenser — klar til brug.",
             "button_label": "Se applikator",
-            "button_link": "shopify://products/aroma-kugle-dispenser",
+            "button_link": "",
             "featured": false
           }
         }
       },
       "block_order": [
-        "offer_3pack",
-        "offer_5pack",
-        "offer_starter"
+        "offer_pdtNbx",
+        "offer_NeeUJY",
+        "offer_LkpxRR"
       ],
+      "name": "Mix bundle offers",
       "settings": {
         "heading": "Mix dine favoritter",
         "subheading": "Saml dine scents og spar. Gratis fragt over 149 kr.",
-        "padding_top": 48,
-        "padding_bottom": 24
+        "padding_top": 40,
+        "padding_bottom": 40
       }
     },
     "section_6UCHdx": {
@@ -3131,7 +3131,7 @@
   },
   "order": [
     "hero_jVaWmY",
-    "mix_bundle_offers",
+    "mix_bundle_offers_CGGnn4",
     "section_6UCHdx",
     "custom_header_hKt47U",
     "product_list_g94jwC",
@@ -3147,6 +3147,7 @@
     "custom_header_h6hca6",
     "category_cards_QFi3a4",
     "custom_header_MEeXkz",
+    "reviews_slider_ijc4Jt",
     "section_UUkBF3",
     "faq_with_image_hffmGe",
     "177084385355b73039"
