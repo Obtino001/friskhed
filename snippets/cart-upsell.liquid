@@ -2,6 +2,7 @@
   assign applicator = settings.cart_upsell_applicator
   assign scent_collection = settings.cart_upsell_scents
   assign cart_product_ids = cart.items | map: 'product_id'
+  assign skip_product_id = exclude_product.id
   assign show_applicator = false
   assign upsell_product = nil
   assign qty_3 = settings.mix_pack_3_qty | default: 3
@@ -23,19 +24,23 @@
 
   if applicator != blank
     unless cart_product_ids contains applicator.id
-      if applicator.available
-        assign show_applicator = true
-      endif
+      unless skip_product_id != blank and applicator.id == skip_product_id
+        if applicator.available
+          assign show_applicator = true
+        endif
+      endunless
     endunless
   endif
 
   if scent_collection != blank
     for rec in scent_collection.products limit: 12
       unless cart_product_ids contains rec.id
-        if rec.available
-          assign upsell_product = rec
-          break
-        endif
+        unless skip_product_id != blank and rec.id == skip_product_id
+          if rec.available
+            assign upsell_product = rec
+            break
+          endif
+        endunless
       endunless
     endfor
   endif
@@ -44,7 +49,7 @@
 <script src="{{ 'cart-upsell.js' | asset_url }}" type="module"></script>
 
 {% if show_applicator or upsell_product %}
-  <cart-upsell class="cart-upsell">
+  <cart-upsell class="cart-upsell{% if context == 'pdp' %} cart-upsell--pdp{% endif %}">
     <p class="cart-upsell__heading">{{ upsell_heading }}</p>
 
     {% if show_applicator %}
@@ -139,5 +144,11 @@
   .cart-upsell .add-to-cart__added-icon {
     width: 24px;
     height: 24px;
+  }
+
+  .cart-upsell--pdp {
+    width: 100%;
+    padding: 12px 0 4px;
+    border-top: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
   }
 {% endstylesheet %}

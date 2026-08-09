@@ -405,6 +405,12 @@
               "settings": {},
               "blocks": {}
             },
+            "pdp_upsell_pdp": {
+              "type": "_pdp-upsell",
+              "name": "PDP complete order",
+              "settings": {},
+              "blocks": {}
+            },
             "pdp_quotes_pdp": {
               "type": "_pdp-review-quotes",
               "name": "PDP review quotes",
@@ -432,6 +438,7 @@
             "shipping_7bHfGn",
             "payment_icons_4GPxAT",
             "buy_buttons_eYQEYi",
+            "pdp_upsell_pdp",
             "accordion_FYWXJn"
           ]
         }

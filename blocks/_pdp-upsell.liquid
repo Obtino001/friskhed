@@ -1,0 +1,22 @@
+{%- liquid
+  assign current_product = closest.product | default: product
+-%}
+{% render 'cart-upsell', exclude_product: current_product, context: 'pdp' %}
+
+{% schema %}
+{
+  "name": "PDP complete order",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Same cart cross-sell: applicator + another scent. Uses Theme settings → Cart cross-sells."
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP complete order"
+    }
+  ]
+}
+{% endschema %}
