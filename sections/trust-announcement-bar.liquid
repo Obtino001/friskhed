@@ -8,8 +8,15 @@
 -%}
 
 {%- style -%}
+  #shopify-section-{{ section.id }},
+  .shopify-section.trust-announcement-section {
+    width: 100%;
+    max-width: none;
+  }
+
   .iwao-trust-bar-{{ section.id }} {
     width: 100%;
+    max-width: none;
     min-height: 38px;
     background: {{ section.settings.bg_color }};
     color: {{ section.settings.text_color }};
@@ -331,7 +338,7 @@
 {
   "name": "Trust Announcement Bar",
   "tag": "section",
-  "class": "section",
+  "class": "header-section trust-announcement-section",
   "enabled_on": {
     "groups": ["header"]
   },
