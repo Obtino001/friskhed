@@ -110,8 +110,9 @@
               class="cart-drawer__items"
             >
               {% render 'cart-products', drawer_context: 'drawer' %}
-              {% render 'cart-upsell' %}
             </scroll-hint>
+
+            {% render 'cart-upsell' %}
 
             <div
               class="cart-drawer__summary"
@@ -172,9 +173,12 @@
   }
 
   .cart-drawer__content {
-    height: calc(100% - var(--header-height));
+    flex: 1;
+    min-height: 0;
+    height: auto;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .cart-drawer__summary {

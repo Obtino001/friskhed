@@ -1,124 +1,36 @@
-{%- liquid
-  assign quote_count = 0
-  for i in (1..3)
-    assign quote_key = 'quote_' | append: i
-    if block.settings[quote_key] != blank
-      assign quote_count = quote_count | plus: 1
-    endif
-  endfor
--%}
-
-{% if quote_count > 0 %}
-  <pdp-review-carousel
-    class="pdp-review-quotes"
-    data-interval="2800"
-    {{ block.shopify_attributes }}
-  >
-    <div class="pdp-review-quotes__viewport">
-      <div class="pdp-review-quotes__track">
-        {% for i in (1..3) %}
-          {% liquid
-            assign author_key = 'author_' | append: i
-            assign quote_key = 'quote_' | append: i
-            assign author = block.settings[author_key]
-            assign quote = block.settings[quote_key]
-          %}
-          {% if quote != blank %}
-            <blockquote class="pdp-review-quotes__item">
-              <p class="pdp-review-quotes__text">“{{ quote | escape }}”</p>
-              {% if author != blank %}
-                <footer class="pdp-review-quotes__author">{{ author | escape }} · Trustpilot</footer>
-              {% endif %}
-            </blockquote>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </pdp-review-carousel>
-
-  <script>
-    if (!customElements.get('pdp-review-carousel')) {
-      customElements.define(
-        'pdp-review-carousel',
-        class PdpReviewCarousel extends HTMLElement {
-          connectedCallback() {
-            this.track = this.querySelector('.pdp-review-quotes__track');
-            this.slides = Array.from(this.querySelectorAll('.pdp-review-quotes__item'));
-            this.index = 0;
-            this.interval = Number(this.dataset.interval || 2800);
-            if (this.slides.length < 2) return;
-
-            const clone = this.slides[0].cloneNode(true);
-            clone.setAttribute('aria-hidden', 'true');
-            this.track.appendChild(clone);
-
-            this.track.addEventListener('transitionend', () => {
-              if (this.index !== this.slides.length) return;
-              this.track.style.transition = 'none';
-              this.index = 0;
-              this.track.style.transform = 'translateX(0)';
-              void this.track.offsetWidth;
-              this.track.style.transition = '';
-            });
-
-            this.start();
-            this.addEventListener('pointerenter', () => this.stop());
-            this.addEventListener('pointerleave', () => this.start());
-          }
-
-          disconnectedCallback() {
-            this.stop();
-          }
-
-          start() {
-            this.stop();
-            this.timer = setInterval(() => this.go(this.index + 1), this.interval);
-          }
-
-          stop() {
-            if (this.timer) clearInterval(this.timer);
-          }
-
-          go(next) {
-            this.index = next;
-            this.track.style.transform = 'translateX(-' + this.index * 100 + '%)';
-          }
-        }
-      );
-    }
-  </script>
-{% endif %}
+{%- assign quotes = '' -%}
+<div class="pdp-review-quotes" {{ block.shopify_attributes }}>
+  {% for i in (1..3) %}
+    {% liquid
+      assign author_key = 'author_' | append: i
+      assign quote_key = 'quote_' | append: i
+      assign author = block.settings[author_key]
+      assign quote = block.settings[quote_key]
+    %}
+    {% if quote != blank %}
+      <blockquote class="pdp-review-quotes__item">
+        <p class="pdp-review-quotes__text">“{{ quote | escape }}”</p>
+        {% if author != blank %}
+          <footer class="pdp-review-quotes__author">{{ author | escape }} · Trustpilot</footer>
+        {% endif %}
+      </blockquote>
+    {% endif %}
+  {% endfor %}
+</div>
 
 {% stylesheet %}
   .pdp-review-quotes {
-    display: block;
-    width: 100%;
-    margin: 0;
-  }
-
-  .pdp-review-quotes__viewport {
-    overflow: hidden;
-    border-radius: 8px;
-  }
-
-  .pdp-review-quotes__track {
     display: flex;
-    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-    will-change: transform;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pdp-review-quotes__track {
-      transition: none;
-    }
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
   }
 
   .pdp-review-quotes__item {
-    flex: 0 0 100%;
     margin: 0;
-    padding: 12px 14px;
+    padding: 10px 12px;
     background: rgba(0, 0, 0, 0.04);
-    box-sizing: border-box;
+    border-radius: 8px;
   }
 
   .pdp-review-quotes__text {
