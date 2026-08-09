@@ -27,7 +27,7 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h1><strong>Den mentholsmag du mangler</strong></h1>",
+            "text": "<h1><strong>Den friske menthol-smag du savner</strong></h1>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
