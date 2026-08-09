@@ -8,6 +8,8 @@ class MixPackPicker extends HTMLElement {
   #price3 = '49';
   #price5 = '75';
   #target = 3;
+  /** @type {HTMLElement | null} */
+  #top = null;
   /** @type {MutationObserver | null} */
   #observer = null;
 
@@ -36,10 +38,43 @@ class MixPackPicker extends HTMLElement {
       if (appCheck instanceof HTMLInputElement) appCheck.checked = true;
     }
 
+    this.#mountTop();
     this.#disableCardLinks();
     this.#bind();
     this.#syncTargetInputs();
     this.#render();
+  }
+
+  #mountTop() {
+    const top = this.querySelector('[data-mix-top]');
+    if (!(top instanceof HTMLElement)) return;
+    const title = document.querySelector('.collection-tittle-custom');
+    const grid = document.getElementById('ResultsList') || document.querySelector('.product-grid');
+    if (title) title.insertAdjacentElement('afterend', top);
+    else if (grid) grid.insertAdjacentElement('beforebegin', top);
+    else return;
+    this.#top = top;
+  }
+
+  /** @param {number} qty */
+  #setTarget(qty) {
+    this.#target = qty === this.#qty5 ? this.#qty5 : this.#qty3;
+    this.#trimSelection();
+    this.#render();
+    const url = new URL(window.location.href);
+    url.searchParams.set('mix', String(this.#target));
+    history.replaceState({}, '', url);
+  }
+
+  /** @param {string} selector */
+  #all(selector) {
+    const roots = [this, this.#top].filter(Boolean);
+    /** @type {Element[]} */
+    const found = [];
+    roots.forEach((root) => {
+      found.push(...root.querySelectorAll(selector));
+    });
+    return found;
   }
 
   disconnectedCallback() {
@@ -61,20 +96,24 @@ class MixPackPicker extends HTMLElement {
   }
 
   #bind() {
-    this.querySelectorAll('[data-mix-target]').forEach((input) => {
+    this.#all('[data-mix-target]').forEach((input) => {
       input.addEventListener('change', () => {
         if (!(input instanceof HTMLInputElement) || !input.checked) return;
-        this.#target = Number(input.value) || this.#qty3;
-        this.#trimSelection();
-        this.#render();
+        this.#setTarget(Number(input.value) || this.#qty3);
       });
     });
 
-    this.querySelectorAll('[data-mix-app], [data-mix-app-type]').forEach((input) => {
+    this.#all('[data-mix-app], [data-mix-app-type]').forEach((input) => {
       input.addEventListener('change', () => this.#render());
     });
 
-    this.querySelector('[data-mix-submit]')?.addEventListener('click', () => this.#submit());
+    this.#all('[data-mix-offer]').forEach((offer) => {
+      offer.addEventListener('click', () => {
+        this.#setTarget(Number(offer.getAttribute('data-mix-offer')));
+      });
+    });
+
+    this.#all('[data-mix-submit]').forEach((btn) => btn.addEventListener('click', () => this.#submit()));
     document.addEventListener('click', this.#onGridClick, true);
 
     const grid = document.getElementById('ResultsList');
@@ -88,7 +127,7 @@ class MixPackPicker extends HTMLElement {
   #onGridClick = (event) => {
     if (document.body.dataset.mixPicker !== 'on') return;
     if (!(event.target instanceof Element)) return;
-    if (event.target.closest('mix-pack-picker')) return;
+    if (event.target.closest('mix-pack-picker, [data-mix-top]')) return;
     if (event.target.closest('header-component, .header, cart-drawer-component, nav')) return;
 
     const item = event.target.closest('.product-grid__item[data-variant-id], product-card, product-card-link');
@@ -126,6 +165,7 @@ class MixPackPicker extends HTMLElement {
     if (this.#selected.has(id) || this.#selected.size >= this.#target) return;
     this.#selected.set(id, { id, title: item.getAttribute('data-product-title') || '' });
     item.classList.add('is-mix-selected');
+    this.#markCard(item);
   }
 
   /** @param {string} id */
@@ -133,6 +173,31 @@ class MixPackPicker extends HTMLElement {
     this.#selected.delete(id);
     document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"]`).forEach((item) => {
       item.classList.remove('is-mix-selected');
+      item.querySelector('.mix-pick-mark')?.remove();
+    });
+  }
+
+  /** @param {Element} item */
+  #markCard(item) {
+    const card = item.querySelector('.product-card') || item;
+    if (!(card instanceof HTMLElement)) return;
+    if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+    let mark = item.querySelector('.mix-pick-mark');
+    if (!(mark instanceof HTMLElement)) {
+      mark = document.createElement('span');
+      mark.className = 'mix-pick-mark';
+      mark.setAttribute('aria-hidden', 'true');
+      card.prepend(mark);
+    }
+  }
+
+  #renumberMarks() {
+    let index = 1;
+    this.#selected.forEach((_, id) => {
+      document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"] .mix-pick-mark`).forEach((mark) => {
+        mark.textContent = String(index);
+      });
+      index += 1;
     });
   }
 
@@ -145,43 +210,66 @@ class MixPackPicker extends HTMLElement {
   }
 
   #syncTargetInputs() {
-    this.querySelectorAll('[data-mix-target]').forEach((input) => {
+    this.#all('[data-mix-target]').forEach((input) => {
       if (!(input instanceof HTMLInputElement)) return;
       input.checked = Number(input.value) === this.#target;
     });
   }
 
   #appVariantId() {
-    const enabled = this.querySelector('[data-mix-app]');
+    const enabled = this.#all('[data-mix-app]')[0];
     if (!(enabled instanceof HTMLInputElement) || !enabled.checked) return '';
-    const type = this.querySelector('[data-mix-app-type]:checked');
+    const type = this.#all('[data-mix-app-type]').find((el) => el instanceof HTMLInputElement && el.checked);
     if (type instanceof HTMLInputElement) return type.value;
     return this.dataset.appId || '';
   }
 
   #render() {
     this.#syncTargetInputs();
+    this.#renumberMarks();
     const count = this.#selected.size;
-    const countEl = this.querySelector('[data-mix-count]');
-    const targetEl = this.querySelector('[data-mix-target-label]');
-    const status = this.querySelector('[data-mix-status]');
-    const submit = this.querySelector('[data-mix-submit]');
-    const appTypes = this.querySelector('[data-mix-app-types]');
-    const appOn = this.querySelector('[data-mix-app]');
     const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
+    const save = this.#target === this.#qty5 ? this.dataset.save5 || '25' : this.dataset.save3 || '11';
+    const ready = count >= this.#target;
+    const statusText = ready
+      ? `${this.#target}-pack rabat klar · ${price} kr (spar ${save} kr)`
+      : `Vælg ${this.#target - count} mere — så aktiveres ${this.#target}-pack ${price} kr`;
 
-    if (countEl) countEl.textContent = String(count);
-    if (targetEl) targetEl.textContent = String(this.#target);
-    if (status) {
-      status.textContent =
-        count >= this.#target
-          ? 'Klar — læg i kurv'
-          : `Klik på ${this.#target - count} scent${this.#target - count === 1 ? '' : 's'} mere`;
+    this.#all('[data-mix-count]').forEach((el) => {
+      el.textContent = String(count);
+    });
+    this.#all('[data-mix-target-label]').forEach((el) => {
+      el.textContent = String(this.#target);
+    });
+    this.#all('[data-mix-status]').forEach((el) => {
+      el.textContent = statusText;
+    });
+    this.#all('[data-mix-submit]').forEach((submit) => {
+      if (!(submit instanceof HTMLButtonElement)) return;
+      submit.disabled = !ready;
+      submit.textContent = ready ? `Læg i kurv · ${price} kr` : `Vælg ${this.#target - count} mere`;
+    });
+
+    this.#all('[data-mix-offer]').forEach((offer) => {
+      const qty = Number(offer.getAttribute('data-mix-offer'));
+      const active = qty === this.#target;
+      offer.classList.toggle('is-active', active);
+      offer.classList.toggle('is-ready', active && ready);
+    });
+    this.#top?.classList.toggle('is-ready', ready);
+
+    const slots = this.#all('[data-mix-slots]')[0];
+    if (slots) {
+      slots.innerHTML = '';
+      for (let i = 0; i < this.#target; i += 1) {
+        const slot = document.createElement('span');
+        slot.className = `mix-pick__slot${i < count ? ' is-filled' : ''}`;
+        slots.appendChild(slot);
+      }
     }
-    if (submit instanceof HTMLButtonElement) {
-      submit.disabled = count < this.#target;
-      submit.textContent = `Læg i kurv · ${price} kr`;
-    }
+
+    const appTypes = this.#all('[data-mix-app-types]')[0];
+    const appOn = this.#all('[data-mix-app]')[0];
     if (appTypes instanceof HTMLElement && appOn instanceof HTMLInputElement) {
       appTypes.hidden = !appOn.checked;
     }

@@ -330,7 +330,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Har du spørgsmål til vores produkter, eller er du interesseret i et erhvervssamarbejde, er du altid velkommen til at kontakte os på mail.</p><p>Vi bestræber os på at besvare alle henvendelser inden for 12 timer. <a href=\"mailto:kontakt@friskhed.dk\" title=\"mailto:kontakt@friskhed.dk\">Kontakt os</a></p><p><strong>Friskhed.dk ApS</strong><br/>CVR: 43519379<br/>Lunikvej 20b, 2670 Greve</p><p><a href=\"mailto:kontakt@friskhed.dk\">kontakt@friskhed.dk</a></p>",
+                "text": "<p>Har du spørgsmål til vores produkter, eller er du interesseret i et erhvervssamarbejde, er du altid velkommen til at kontakte os på mail.</p><p>Vi bestræber os på at besvare alle henvendelser inden for 12 timer. <a href=\"mailto:kontakt@friskhed.dk\" title=\"mailto:kontakt@friskhed.dk\">Kontakt os</a></p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",

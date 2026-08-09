@@ -19,7 +19,7 @@
         function (event) {
           var target = event.target;
           if (!(target instanceof Element)) return;
-          if (target.closest('mix-pack-picker')) return;
+          if (target.closest('mix-pack-picker, [data-mix-top]')) return;
           if (target.closest('a.product-card__link, product-card-link, product-card, .product-grid__item[data-variant-id]')) {
             event.preventDefault();
           }
@@ -37,10 +37,34 @@
     data-qty-5="{{ qty_5 }}"
     data-price-3="{{ price_3 }}"
     data-price-5="{{ price_5 }}"
+    data-save-3="11"
+    data-save-5="25"
     data-app-id="{{ app_variant.id }}"
     data-collection="{{ collection.handle }}"
     data-scent-collection="{{ settings.cart_upsell_scents.handle }}"
   >
+    <div class="mix-pick__top" data-mix-top>
+      <div class="mix-pick__top-inner">
+        <p class="mix-pick__top-kicker">Mix dine favoritter</p>
+        <div class="mix-pick__top-offers">
+          <button type="button" class="mix-pick__offer is-active" data-mix-offer="3">
+            Mix 3 · {{ price_3 }} kr
+            <small>Spar 11 kr</small>
+          </button>
+          <button type="button" class="mix-pick__offer" data-mix-offer="5">
+            Mix 5 · {{ price_5 }} kr
+            <small>Spar 25 kr</small>
+          </button>
+        </div>
+        <div class="mix-pick__slots" data-mix-slots aria-hidden="true"></div>
+        <p class="mix-pick__top-status">
+          <span data-mix-count>0</span>/<span data-mix-target-label>{{ qty_3 }}</span>
+          ·
+          <span data-mix-status>Vælg dine scents — rabatten aktiveres automatisk</span>
+        </p>
+      </div>
+    </div>
+
     <div class="mix-pick__bar">
       <div class="mix-pick__row">
         <div class="mix-pick__segment" role="radiogroup" aria-label="Vælg mix">
@@ -104,8 +128,6 @@
     z-index: 80;
     display: block;
     width: 100%;
-    margin: 0;
-    padding: 0;
     background: #fff;
     border-top: 1px solid rgb(18 18 18 / 0.12);
     box-shadow: 0 -12px 40px rgb(18 18 18 / 0.1);
@@ -113,6 +135,102 @@
 
   mix-pack-picker.mix-pick[hidden] {
     display: none !important;
+  }
+
+  .mix-pick__top {
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #121212;
+    color: #fff;
+  }
+
+  .mix-pick__top-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mix-pick__top-kicker {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .mix-pick__top-offers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mix-pick__offer {
+    appearance: none;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    opacity: 0.55;
+  }
+
+  .mix-pick__offer small {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #7ddeb8;
+  }
+
+  .mix-pick__offer.is-active {
+    opacity: 1;
+    background: #fff;
+    color: #121212;
+    border-color: #fff;
+  }
+
+  .mix-pick__offer.is-ready {
+    box-shadow: inset 0 0 0 2px #13a877;
+  }
+
+  .mix-pick__slots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mix-pick__slot {
+    width: 28px;
+    height: 8px;
+    border-radius: 99px;
+    background: rgb(255 255 255 / 0.22);
+  }
+
+  .mix-pick__slot.is-filled {
+    background: #13a877;
+  }
+
+  .mix-pick__top-status {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .mix-pick__top.is-ready .mix-pick__top-status {
+    color: #7ddeb8;
+  }
+
+  html[data-mix-picker='on'] p.collection-tittle-custom {
+    padding-bottom: 12px;
   }
 
   .mix-pick__bar {
@@ -206,37 +324,55 @@
     cursor: pointer;
   }
 
-  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .card-gallery,
   body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card {
     position: relative;
   }
 
-  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card::after {
+  .mix-pick-mark {
+    position: absolute;
+    top: 54px;
+    left: 14px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #121212;
+    color: #fff;
+    border: 3px solid #fff;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  }
+
+  .mix-pick-mark::after {
     content: '';
     position: absolute;
-    top: 52px;
-    left: 15px;
-    z-index: 5;
-    width: 32px;
-    height: 32px;
+    right: -2px;
+    bottom: -2px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #121212 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.2' d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E") center / 18px no-repeat;
-    box-shadow: 0 1px 4px rgb(0 0 0 / 0.2);
-    pointer-events: none;
+    background: #13a877 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E") center / 9px no-repeat;
+    border: 2px solid #fff;
   }
 
   @media screen and (max-width: 767px) {
-    body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card::after {
-      top: 46px;
-      left: 12px;
-      width: 28px;
-      height: 28px;
-      background-size: 16px;
+    .mix-pick-mark {
+      top: 48px;
+      left: 10px;
+      width: 32px;
+      height: 32px;
+      font-size: 0.8125rem;
     }
   }
 
   body[data-mix-picker='on'] .product-grid__item.is-mix-locked {
-    opacity: 0.4;
+    opacity: 0.55;
     pointer-events: none;
   }
 
