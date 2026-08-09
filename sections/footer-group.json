@@ -162,7 +162,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Vi laver ting, der fungerer bedre og holder længere. Vores produkter løser reelle problemer med et rent design og ærlige materialer.</p><p></p><p>CVR: 43519379</p><p>Lunikvej 20b, 2670 Greve</p><p><a href=\"mailto:kontakt@friskhed.dk\">kontakt@friskhed.dk</a></p>",
+                "text": "<p>Vi laver ting, der fungerer bedre og holder længere. Vores produkter løser reelle problemer med et rent design og ærlige materialer.</p><p><strong>Friskhed.dk ApS</strong></p><p>CVR: 43519379</p><p>Lunikvej 20b, 2670 Greve</p><p><a href=\"mailto:kontakt@friskhed.dk\">kontakt@friskhed.dk</a></p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
