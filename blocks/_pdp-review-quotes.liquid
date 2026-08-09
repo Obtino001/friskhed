@@ -11,47 +11,29 @@
 {% if quote_count > 0 %}
   <pdp-review-carousel
     class="pdp-review-quotes"
-    data-interval="4500"
+    data-interval="2800"
     {{ block.shopify_attributes }}
   >
     <div class="pdp-review-quotes__viewport">
-      {% assign shown = 0 %}
-      {% for i in (1..3) %}
-        {% liquid
-          assign author_key = 'author_' | append: i
-          assign quote_key = 'quote_' | append: i
-          assign author = block.settings[author_key]
-          assign quote = block.settings[quote_key]
-        %}
-        {% if quote != blank %}
-          {% assign shown = shown | plus: 1 %}
-          <blockquote class="pdp-review-quotes__item"{% unless shown == 1 %} hidden{% endunless %}>
-            <p class="pdp-review-quotes__text">“{{ quote | escape }}”</p>
-            {% if author != blank %}
-              <footer class="pdp-review-quotes__author">{{ author | escape }} · Trustpilot</footer>
-            {% endif %}
-          </blockquote>
-        {% endif %}
-      {% endfor %}
-    </div>
-
-    {% if quote_count > 1 %}
-      <div class="pdp-review-quotes__nav" aria-label="Trustpilot anmeldelser">
-        {% assign shown = 0 %}
+      <div class="pdp-review-quotes__track">
         {% for i in (1..3) %}
-          {% assign quote_key = 'quote_' | append: i %}
-          {% if block.settings[quote_key] != blank %}
-            {% assign shown = shown | plus: 1 %}
-            <button
-              type="button"
-              class="pdp-review-quotes__dot{% if shown == 1 %} is-active{% endif %}"
-              data-dot
-              aria-label="Anmeldelse {{ shown }}"
-            ></button>
+          {% liquid
+            assign author_key = 'author_' | append: i
+            assign quote_key = 'quote_' | append: i
+            assign author = block.settings[author_key]
+            assign quote = block.settings[quote_key]
+          %}
+          {% if quote != blank %}
+            <blockquote class="pdp-review-quotes__item">
+              <p class="pdp-review-quotes__text">“{{ quote | escape }}”</p>
+              {% if author != blank %}
+                <footer class="pdp-review-quotes__author">{{ author | escape }} · Trustpilot</footer>
+              {% endif %}
+            </blockquote>
           {% endif %}
         {% endfor %}
       </div>
-    {% endif %}
+    </div>
   </pdp-review-carousel>
 
   <script>
@@ -60,13 +42,25 @@
         'pdp-review-carousel',
         class PdpReviewCarousel extends HTMLElement {
           connectedCallback() {
+            this.track = this.querySelector('.pdp-review-quotes__track');
             this.slides = Array.from(this.querySelectorAll('.pdp-review-quotes__item'));
-            this.dots = Array.from(this.querySelectorAll('[data-dot]'));
             this.index = 0;
-            this.interval = Number(this.dataset.interval || 4500);
-            this.dots.forEach((dot, i) => {
-              dot.addEventListener('click', () => this.go(i, true));
+            this.interval = Number(this.dataset.interval || 2800);
+            if (this.slides.length < 2) return;
+
+            const clone = this.slides[0].cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            this.track.appendChild(clone);
+
+            this.track.addEventListener('transitionend', () => {
+              if (this.index !== this.slides.length) return;
+              this.track.style.transition = 'none';
+              this.index = 0;
+              this.track.style.transform = 'translateX(0)';
+              void this.track.offsetWidth;
+              this.track.style.transition = '';
             });
+
             this.start();
             this.addEventListener('pointerenter', () => this.stop());
             this.addEventListener('pointerleave', () => this.start());
@@ -78,7 +72,6 @@
 
           start() {
             this.stop();
-            if (this.slides.length < 2) return;
             this.timer = setInterval(() => this.go(this.index + 1), this.interval);
           }
 
@@ -86,16 +79,9 @@
             if (this.timer) clearInterval(this.timer);
           }
 
-          go(next, user) {
-            if (!this.slides.length) return;
-            this.index = ((next % this.slides.length) + this.slides.length) % this.slides.length;
-            this.slides.forEach((slide, i) => {
-              slide.hidden = i !== this.index;
-            });
-            this.dots.forEach((dot, i) => {
-              dot.classList.toggle('is-active', i === this.index);
-            });
-            if (user) this.start();
+          go(next) {
+            this.index = next;
+            this.track.style.transform = 'translateX(-' + this.index * 100 + '%)';
           }
         }
       );
@@ -111,46 +97,39 @@
   }
 
   .pdp-review-quotes__viewport {
-    min-height: 0;
-  }
-
-  .pdp-review-quotes__item {
-    margin: 0;
-    padding: 8px 10px;
-    background: rgba(0, 0, 0, 0.04);
+    overflow: hidden;
     border-radius: 8px;
   }
 
+  .pdp-review-quotes__track {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pdp-review-quotes__track {
+      transition: none;
+    }
+  }
+
+  .pdp-review-quotes__item {
+    flex: 0 0 100%;
+    margin: 0;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+  }
+
   .pdp-review-quotes__text {
-    margin: 0 0 2px;
-    font-size: 0.8125rem;
-    line-height: 1.35;
+    margin: 0 0 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
   }
 
   .pdp-review-quotes__author {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--color-foreground-muted, #666);
-  }
-
-  .pdp-review-quotes__nav {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
-  }
-
-  .pdp-review-quotes__dot {
-    width: 6px;
-    height: 6px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
-
-  .pdp-review-quotes__dot.is-active {
-    background: #13a877;
   }
 {% endstylesheet %}
 
