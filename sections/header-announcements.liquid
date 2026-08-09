@@ -22,6 +22,16 @@
     endif
   %}
 
+  <div class="announcement-bar__trust">
+    {% if settings.trustpilot_url != blank %}
+      <a class="announcement-bar__trust-link" href="{{ settings.trustpilot_url }}">
+        {% render 'trustpilot-claim' %}
+      </a>
+    {% else %}
+      <span>{% render 'trustpilot-claim' %}</span>
+    {% endif %}
+  </div>
+
   <announcement-bar-component
     class="announcement-bar__slider"
     {% if autoplay == true %}
@@ -41,6 +51,23 @@
 {% stylesheet %}
   .announcement-bar {
     border-block-end: var(--border-bottom-width) solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .announcement-bar__trust {
+    width: 100%;
+    text-align: center;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .announcement-bar__trust-link {
+    color: inherit;
+    text-decoration: none;
   }
 
   .announcement-bar__slider {

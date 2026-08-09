@@ -89,9 +89,14 @@
 
 {% schema %}
 {
-  "name": "Menthol strength guide",
+      "name": "Menthol strength guide",
   "tag": null,
-  "settings": [],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Set product metafield custom.menthol_strength to 1–5 (Mild → Ultra) in Shopify admin. Falls back to title/tags if empty."
+    }
+  ],
   "presets": [
     {
       "name": "Menthol strength guide"

@@ -136,13 +136,18 @@
       {
         "type": "product",
         "id": "cart_upsell_applicator",
-        "label": "Applicator product"
+        "label": "Applicator product",
+        "info": "Friskhed applicator: aroma-kugle-dispenser"
       },
       {
         "type": "collection",
         "id": "cart_upsell_scents",
         "label": "Scent mix collection",
-        "info": "Used to suggest another aroma product in the cart drawer."
+        "info": "Use aroma-kugler so the cart suggests another scent."
+      },
+      {
+        "type": "paragraph",
+        "content": "Shopify admin still required: (1) Shipping rates free from 149 DKK not 450. (2) Create 3-pack 49 DKK, 5-pack 75 DKK, starter kit aroma+applicator. (3) Metafield custom.menthol_strength 1–5 on aroma products. (4) Automatic 10% discount for the welcome popup. (5) Preview this unpublished theme before going live."
       },
       {
         "type": "header",
