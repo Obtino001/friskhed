@@ -40,11 +40,17 @@
 
   .cart-drawer__dialog {
     position: fixed;
+    inset: 0 0 0 auto;
+    top: 0;
+    right: 0;
+    left: auto;
+    bottom: 0;
+    margin: 0;
     border-radius: 0;
-    width: var(--sidebar-width);
-    max-width: 95vw;
-    height: 100%;
-    margin: 0 0 0 auto;
+    width: min(var(--sidebar-width), 100vw);
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
     padding: 0;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -55,8 +61,17 @@
 
   /* Needed to ensure the drawer is full height */
   .cart-drawer__dialog:modal {
+    inset: 0 0 0 auto;
+    margin: 0;
+    height: 100dvh;
     max-height: 100dvh;
     overflow-y: hidden;
+  }
+
+  html:has(.cart-drawer__dialog[open]) .sticky-add-to-cart__bar {
+    opacity: 0 !important;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .cart-drawer__inner {

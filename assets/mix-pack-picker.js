@@ -179,15 +179,16 @@ class MixPackPicker extends HTMLElement {
 
   /** @param {Element} item */
   #markCard(item) {
-    const card = item.querySelector('.product-card') || item;
-    if (!(card instanceof HTMLElement)) return;
-    if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+    const host =
+      item.querySelector('.card-gallery') || item.querySelector('.product-card') || item;
+    if (!(host instanceof HTMLElement)) return;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
     let mark = item.querySelector('.mix-pick-mark');
     if (!(mark instanceof HTMLElement)) {
       mark = document.createElement('span');
       mark.className = 'mix-pick-mark';
       mark.setAttribute('aria-hidden', 'true');
-      card.prepend(mark);
+      host.append(mark);
     }
   }
 
@@ -229,11 +230,12 @@ class MixPackPicker extends HTMLElement {
     this.#renumberMarks();
     const count = this.#selected.size;
     const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
-    const save = this.#target === this.#qty5 ? this.dataset.save5 || '25' : this.dataset.save3 || '11';
     const ready = count >= this.#target;
     const statusText = ready
-      ? `${this.#target}-pack rabat klar · ${price} kr (spar ${save} kr)`
-      : `Vælg ${this.#target - count} mere — så aktiveres ${this.#target}-pack ${price} kr`;
+      ? `Rabat klar · ${price} kr`
+      : count === 0
+        ? 'Vælg dine scents'
+        : `Vælg ${this.#target - count} mere`;
 
     this.#all('[data-mix-count]').forEach((el) => {
       el.textContent = String(count);

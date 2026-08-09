@@ -45,40 +45,35 @@
   >
     <div class="mix-pick__top" data-mix-top>
       <div class="mix-pick__top-inner">
-        <p class="mix-pick__top-kicker">Mix dine favoritter</p>
+        <div class="mix-pick__top-head">
+          <p class="mix-pick__top-kicker">Mix dine favoritter</p>
+          <p class="mix-pick__top-hint">Tryk på scents for at fylde dit mix</p>
+        </div>
         <div class="mix-pick__top-offers">
           <button type="button" class="mix-pick__offer is-active" data-mix-offer="3">
-            Mix 3 · {{ price_3 }} kr
-            <small>Spar 11 kr</small>
+            <span class="mix-pick__offer-name">Mix 3</span>
+            <span class="mix-pick__offer-price">{{ price_3 }} kr</span>
+            <span class="mix-pick__offer-save">Spar 11 kr</span>
           </button>
           <button type="button" class="mix-pick__offer" data-mix-offer="5">
-            Mix 5 · {{ price_5 }} kr
-            <small>Spar 25 kr</small>
+            <span class="mix-pick__offer-name">Mix 5</span>
+            <span class="mix-pick__offer-price">{{ price_5 }} kr</span>
+            <span class="mix-pick__offer-save">Spar 25 kr</span>
           </button>
         </div>
-        <div class="mix-pick__slots" data-mix-slots aria-hidden="true"></div>
-        <p class="mix-pick__top-status">
-          <span data-mix-count>0</span>/<span data-mix-target-label>{{ qty_3 }}</span>
-          ·
-          <span data-mix-status>Vælg dine scents — rabatten aktiveres automatisk</span>
-        </p>
+        <div class="mix-pick__progress">
+          <div class="mix-pick__slots" data-mix-slots aria-hidden="true"></div>
+          <p class="mix-pick__top-status">
+            <strong><span data-mix-count>0</span>/<span data-mix-target-label>{{ qty_3 }}</span></strong>
+            <span data-mix-status>Vælg dine scents</span>
+          </p>
+        </div>
       </div>
     </div>
 
     <div class="mix-pick__bar">
-      <div class="mix-pick__row">
-        <div class="mix-pick__segment" role="radiogroup" aria-label="Vælg mix">
-          <label class="mix-pick__seg">
-            <input type="radio" name="mix-target" data-mix-target value="{{ qty_3 }}" checked>
-            <span>{{ qty_3 }}-pack · {{ price_3 }} kr</span>
-          </label>
-          <label class="mix-pick__seg">
-            <input type="radio" name="mix-target" data-mix-target value="{{ qty_5 }}">
-            <span>{{ qty_5 }}-pack · {{ price_5 }} kr</span>
-          </label>
-        </div>
-
-        {% if app != blank or app_alt != blank %}
+      {% if app != blank or app_alt != blank %}
+        <div class="mix-pick__apps">
           <label class="mix-pick__check">
             <input type="checkbox" data-mix-app>
             <span>Med applikator</span>
@@ -103,18 +98,11 @@
               </label>
             {% endif %}
           </div>
-        {% endif %}
-      </div>
-
-      <div class="mix-pick__row mix-pick__row--cta">
-        <p class="mix-pick__status">
-          <strong><span data-mix-count>0</span>/<span data-mix-target-label>{{ qty_3 }}</span></strong>
-          <span data-mix-status>Klik på en scent for at vælge</span>
-        </p>
-        <button type="button" class="button mix-pick__submit" data-mix-submit disabled>
-          Læg i kurv · {{ price_3 }} kr
-        </button>
-      </div>
+        </div>
+      {% endif %}
+      <button type="button" class="button mix-pick__submit" data-mix-submit disabled>
+        Vælg {{ qty_3 }} scents
+      </button>
     </div>
   </mix-pack-picker>
 {%- endif -%}
@@ -129,8 +117,8 @@
     display: block;
     width: 100%;
     background: #fff;
-    border-top: 1px solid rgb(18 18 18 / 0.12);
-    box-shadow: 0 -12px 40px rgb(18 18 18 / 0.1);
+    border-top: 1px solid rgb(18 18 18 / 0.08);
+    box-shadow: 0 -8px 28px rgb(18 18 18 / 0.08);
   }
 
   mix-pack-picker.mix-pick[hidden] {
@@ -139,79 +127,115 @@
 
   .mix-pick__top {
     width: 100%;
-    margin: 0 0 16px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: #121212;
-    color: #fff;
+    margin: 0 0 12px;
+    padding: 14px;
+    border-radius: 16px;
+    background: #f6f6f6;
+    color: #121212;
+    border: 1px solid rgb(18 18 18 / 0.08);
   }
 
   .mix-pick__top-inner {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+  }
+
+  .mix-pick__top-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .mix-pick__top-kicker {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.7;
+    letter-spacing: -0.02em;
+  }
+
+  .mix-pick__top-hint {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #666;
   }
 
   .mix-pick__top-offers {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
 
   .mix-pick__offer {
     appearance: none;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 2px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 1px solid rgb(255 255 255 / 0.2);
-    background: transparent;
-    color: inherit;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1.5px solid rgb(18 18 18 / 0.12);
+    background: #fff;
+    color: #121212;
     font: inherit;
-    font-size: 0.875rem;
-    font-weight: 700;
     text-align: left;
     cursor: pointer;
-    opacity: 0.55;
   }
 
-  .mix-pick__offer small {
+  .mix-pick__offer-name {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #7ddeb8;
+    color: #666;
+  }
+
+  .mix-pick__offer-price {
+    font-size: 1.125rem;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .mix-pick__offer-save {
+    font-size: 0.75rem;
+    font-weight: 650;
+    color: #0f7a52;
   }
 
   .mix-pick__offer.is-active {
-    opacity: 1;
-    background: #fff;
-    color: #121212;
-    border-color: #fff;
+    background: #121212;
+    color: #fff;
+    border-color: #121212;
+  }
+
+  .mix-pick__offer.is-active .mix-pick__offer-name {
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .mix-pick__offer.is-active .mix-pick__offer-save {
+    color: #8ee7c0;
   }
 
   .mix-pick__offer.is-ready {
     box-shadow: inset 0 0 0 2px #13a877;
   }
 
-  .mix-pick__slots {
+  .mix-pick__progress {
     display: flex;
+    flex-direction: column;
     gap: 8px;
   }
 
+  .mix-pick__slots {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+
   .mix-pick__slot {
-    width: 28px;
-    height: 8px;
+    flex: 1;
+    height: 6px;
     border-radius: 99px;
-    background: rgb(255 255 255 / 0.22);
+    background: #e4e4e4;
   }
 
   .mix-pick__slot.is-filled {
@@ -220,35 +244,44 @@
 
   .mix-pick__top-status {
     margin: 0;
-    font-size: 0.875rem;
-    font-weight: 600;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.8125rem;
     line-height: 1.35;
+    color: #444;
+  }
+
+  .mix-pick__top-status strong {
+    font-variant-numeric: tabular-nums;
+    color: #121212;
   }
 
   .mix-pick__top.is-ready .mix-pick__top-status {
-    color: #7ddeb8;
+    color: #0f7a52;
   }
 
   html[data-mix-picker='on'] p.collection-tittle-custom {
-    padding-bottom: 12px;
+    padding-top: 20px;
+    padding-bottom: 10px;
   }
 
   .mix-pick__bar {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  }
-
-  .mix-pick__row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px 12px;
+    gap: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   }
 
-  .mix-pick__row--cta {
-    margin-top: 10px;
-    justify-content: space-between;
+  .mix-pick__apps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
   }
 
   .mix-pick__segment {
@@ -287,7 +320,8 @@
   }
 
   .mix-pick__check {
-    border: 1px solid rgb(18 18 18 / 0.18);
+    border: 1px solid rgb(18 18 18 / 0.16);
+    background: #fff;
   }
 
   .mix-pick__check:has(input:checked) {
@@ -296,18 +330,9 @@
     border-color: #121212;
   }
 
-  .mix-pick__status {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.8125rem;
-    line-height: 1.3;
-  }
-
   .mix-pick__submit {
-    min-height: 44px;
-    min-width: 180px;
+    flex: 1 1 180px;
+    min-height: 48px;
     margin: 0;
   }
 
@@ -316,7 +341,7 @@
   }
 
   body[data-mix-picker='on'] {
-    padding-bottom: 140px;
+    padding-bottom: 88px;
   }
 
   body[data-mix-picker='on'] .product-grid__item,
@@ -324,80 +349,59 @@
     cursor: pointer;
   }
 
-  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card {
+  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card,
+  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .card-gallery {
     position: relative;
+  }
+
+  body[data-mix-picker='on'] .product-grid__item.is-mix-selected .product-card {
+    outline: 2px solid #121212;
+    outline-offset: -2px;
   }
 
   .mix-pick-mark {
     position: absolute;
-    top: 54px;
-    left: 14px;
+    top: auto;
+    bottom: 10px;
+    left: 10px;
     z-index: 5;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    background: #121212;
+    background: #13a877;
     color: #fff;
-    border: 3px solid #fff;
-    font-size: 0.9375rem;
-    font-weight: 800;
+    font-size: 0.75rem;
+    font-weight: 750;
     line-height: 1;
     pointer-events: none;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
-  }
-
-  .mix-pick-mark::after {
-    content: '';
-    position: absolute;
-    right: -2px;
-    bottom: -2px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #13a877 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E") center / 9px no-repeat;
-    border: 2px solid #fff;
-  }
-
-  @media screen and (max-width: 767px) {
-    .mix-pick-mark {
-      top: 48px;
-      left: 10px;
-      width: 32px;
-      height: 32px;
-      font-size: 0.8125rem;
-    }
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.18);
   }
 
   body[data-mix-picker='on'] .product-grid__item.is-mix-locked {
-    opacity: 0.55;
+    opacity: 0.45;
     pointer-events: none;
   }
 
   @media screen and (min-width: 750px) {
+    .mix-pick__top {
+      padding: 16px 18px;
+    }
+
     .mix-pick__bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 14px 24px calc(14px + env(safe-area-inset-bottom));
+      flex-wrap: nowrap;
+      padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
     }
 
-    .mix-pick__row--cta {
-      margin-top: 0;
-      flex: 1;
-      justify-content: flex-end;
-      gap: 16px;
-    }
-
-    .mix-pick__status {
-      text-align: right;
+    .mix-pick__submit {
+      flex: 0 0 auto;
+      min-width: 220px;
     }
 
     body[data-mix-picker='on'] {
-      padding-bottom: 96px;
+      padding-bottom: 80px;
     }
   }
 {% endstylesheet %}

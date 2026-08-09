@@ -56,6 +56,7 @@ html {
 
 html[scroll-lock] {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 img,

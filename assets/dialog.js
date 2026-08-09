@@ -39,6 +39,7 @@ export class DialogComponent extends Component {
   }, 50);
 
   #previousScrollY = 0;
+  #usedBodyLock = false;
 
   /**
    * Shows the dialog.
@@ -50,12 +51,20 @@ export class DialogComponent extends Component {
 
     const scrollY = window.scrollY;
     this.#previousScrollY = scrollY;
+    const scrollbarWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+    this.#usedBodyLock = !dialog.hasAttribute('scroll-lock');
 
     // Prevent layout thrashing by separating DOM reads from DOM writes
     requestAnimationFrame(() => {
-      document.body.style.width = '100%';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
+      if (this.#usedBodyLock) {
+        document.body.style.width = '100%';
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        if (scrollbarWidth) document.body.style.paddingRight = `${scrollbarWidth}px`;
+      } else {
+        document.documentElement.setAttribute('scroll-lock', '');
+        if (scrollbarWidth) document.documentElement.style.paddingRight = `${scrollbarWidth}px`;
+      }
 
       dialog.showModal();
       this.dispatchEvent(new DialogOpenEvent());
@@ -82,10 +91,16 @@ export class DialogComponent extends Component {
       subtree: false,
     });
 
-    document.body.style.width = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    window.scrollTo({ top: this.#previousScrollY, behavior: 'instant' });
+    if (this.#usedBodyLock) {
+      document.body.style.width = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.paddingRight = '';
+      window.scrollTo({ top: this.#previousScrollY, behavior: 'instant' });
+    }
+
+    document.documentElement.removeAttribute('scroll-lock');
+    document.documentElement.style.paddingRight = '';
 
     dialog.close();
     dialog.classList.remove('dialog-closing');
