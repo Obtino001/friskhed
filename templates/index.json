@@ -2825,93 +2825,6 @@
         "section_width": "page-width"
       }
     },
-    "reviews_slider_ijc4Jt": {
-      "type": "reviews-slider",
-      "blocks": {
-        "review_PHREaD": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_KTy9WM": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_wYGFi9": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_L4RA6j": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_eeEgh4": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_gmLUip": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        },
-        "review_7T4BUK": {
-          "type": "review",
-          "settings": {
-            "author": "Lorem Ipsum",
-            "headline": "",
-            "content": "<p>Solid byggekvalitet og hurtig levering. Disse låse er nu vores standard for alle containerforsendelser — hver krone værd.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "review_PHREaD",
-        "review_KTy9WM",
-        "review_wYGFi9",
-        "review_L4RA6j",
-        "review_eeEgh4",
-        "review_gmLUip",
-        "review_7T4BUK"
-      ],
-      "disabled": true,
-      "name": "Reviews Slider",
-      "settings": {
-        "bg_color": "#ffffff",
-        "heading": "",
-        "summary_title": "Container-lasse.dk",
-        "rating_text": "<p>4,8 stjerner ud af 5 | </p><p>Baseret på 398 anmeldelser</p>",
-        "trust_text": "Trustpilot",
-        "padding_top": 20,
-        "padding_bottom": 32,
-        "padding_top_mobile": 16,
-        "padding_bottom_mobile": 32,
-        "autoplay": true,
-        "autoplay_speed": 4000,
-        "progress_color": "#000000",
-        "arrow_color": "#000000"
-      }
-    },
     "section_UUkBF3": {
       "type": "section",
       "blocks": {
@@ -3147,7 +3060,6 @@
     "custom_header_h6hca6",
     "category_cards_QFi3a4",
     "custom_header_MEeXkz",
-    "reviews_slider_ijc4Jt",
     "section_UUkBF3",
     "faq_with_image_hffmGe",
     "177084385355b73039"
