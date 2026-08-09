@@ -106,13 +106,10 @@
             aria-label="{{ 'accessibility.cart' | t }}"
             style="--header-height: 60px;"
           >
-            <scroll-hint
-              class="cart-drawer__items"
-            >
+            <div class="cart-drawer__items">
               {% render 'cart-products', drawer_context: 'drawer' %}
-            </scroll-hint>
-
-            {% render 'cart-upsell' %}
+              {% render 'cart-upsell' %}
+            </div>
 
             <div
               class="cart-drawer__summary"
