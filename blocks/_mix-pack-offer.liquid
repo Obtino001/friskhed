@@ -11,26 +11,28 @@
 -%}
 {%- if settings.mix_pack_enable and is_scent -%}
   {%- liquid
-    assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
-    assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
-    assign qty_3 = settings.mix_pack_3_qty | default: 3
-    assign qty_5 = settings.mix_pack_5_qty | default: 5
+    assign qty_10 = settings.mix_pack_10_qty | default: 10
+    assign qty_15 = settings.mix_pack_15_qty | default: 15
+    assign qty_30 = settings.mix_pack_30_qty | default: 30
+    assign pct_10 = settings.mix_pack_10_pct | default: 10
+    assign pct_15 = settings.mix_pack_15_pct | default: 15
+    assign pct_30 = settings.mix_pack_30_pct | default: 20
     assign scent_url = scent_collection.url
     if scent_url != blank
-      assign mix_url = scent_url | append: '?mix=3'
+      assign mix_url = scent_url | append: '?mix=10'
     endif
   -%}
   {%- if mix_url != blank -%}
     <a class="mix-pack-offer" href="{{ mix_url }}" {{ block.shopify_attributes }}>
       <p class="mix-pack-offer__text">
-        Mix dine favoritter · {{ qty_3 }} stk {{ price_3 | money_without_trailing_zeros }} · {{ qty_5 }} stk {{ price_5 | money_without_trailing_zeros }}
+        Mix dine favoritter · {{ qty_10 }} stk −{{ pct_10 }}% · {{ qty_15 }} stk −{{ pct_15 }}% · {{ qty_30 }} stk −{{ pct_30 }}%
       </p>
-      <span class="mix-pack-offer__link">Vælg 3 scents</span>
+      <span class="mix-pack-offer__link">Vælg {{ qty_10 }} stk</span>
     </a>
   {%- else -%}
     <div class="mix-pack-offer" {{ block.shopify_attributes }}>
       <p class="mix-pack-offer__text">
-        Mix dine favoritter · {{ qty_3 }} stk {{ price_3 | money_without_trailing_zeros }} · {{ qty_5 }} stk {{ price_5 | money_without_trailing_zeros }}
+        Mix dine favoritter · {{ qty_10 }} stk −{{ pct_10 }}% · {{ qty_15 }} stk −{{ pct_15 }}% · {{ qty_30 }} stk −{{ pct_30 }}%
       </p>
     </div>
   {%- endif -%}
@@ -76,7 +78,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows 3-pack / 5-pack prices from Theme settings. Create matching automatic discounts in Shopify admin."
+      "content": "Shows 10 / 15 / 30 stk volume % from Theme settings. Create matching automatic discounts in Shopify admin."
     }
   ],
   "presets": [

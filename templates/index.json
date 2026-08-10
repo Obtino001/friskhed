@@ -137,12 +137,12 @@
           "type": "offer",
           "settings": {
             "badge": "Mest populær",
-            "title": "3-pack",
-            "price": "49 kr",
-            "compare_at": "Spar 11 kr",
-            "text": "Mix 3 aroma-kugler. Rabatten trækkes automatisk i kurven.",
-            "button_label": "Vælg 3 scents",
-            "button_link": "/collections/aroma-kugler?mix=3",
+            "title": "10 stk",
+            "price": "−10%",
+            "compare_at": "Mængderabat",
+            "text": "Køb 10 aroma-kugler og få 10% rabat. Rabatten trækkes automatisk i kurven.",
+            "button_label": "Vælg 10 stk",
+            "button_link": "/collections/aroma-kugler?mix=10",
             "featured": true
           }
         },
@@ -150,25 +150,25 @@
           "type": "offer",
           "settings": {
             "badge": "",
-            "title": "5-pack",
-            "price": "75 kr",
-            "compare_at": "Spar 25 kr",
-            "text": "Mix 5 aroma-kugler og spar mere.",
-            "button_label": "Vælg 5 scents",
-            "button_link": "/collections/aroma-kugler?mix=5",
+            "title": "15 stk",
+            "price": "−15%",
+            "compare_at": "Mængderabat",
+            "text": "Køb 15 aroma-kugler og få 15% rabat.",
+            "button_label": "Vælg 15 stk",
+            "button_link": "/collections/aroma-kugler?mix=15",
             "featured": false
           }
         },
         "offer_LkpxRR": {
           "type": "offer",
           "settings": {
-            "badge": "",
-            "title": "Starter kit",
-            "price": "Kugler + applikator",
-            "compare_at": "",
-            "text": "Vælg dine kugler — tilføj classic eller color applikator i kurven.",
-            "button_label": "Vælg scents",
-            "button_link": "/collections/aroma-kugler?mix=starter",
+            "badge": "Bedst værdi",
+            "title": "30 stk",
+            "price": "−20%",
+            "compare_at": "Mængderabat",
+            "text": "Køb 30 aroma-kugler og få 20% rabat.",
+            "button_label": "Vælg 30 stk",
+            "button_link": "/collections/aroma-kugler?mix=30",
             "featured": false
           }
         }

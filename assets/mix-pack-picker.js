@@ -1,13 +1,15 @@
 import { CartAddEvent } from '@theme/events';
 
 class MixPackPicker extends HTMLElement {
-  /** @type {Map<string, { id: string, title: string }>} */
+  /** @type {Map<string, { id: string, title: string, qty: number }>} */
   #selected = new Map();
-  #qty3 = 3;
-  #qty5 = 5;
-  #price3 = '49';
-  #price5 = '75';
-  #target = 3;
+  #qty10 = 10;
+  #qty15 = 15;
+  #qty30 = 30;
+  #pct10 = 10;
+  #pct15 = 15;
+  #pct30 = 20;
+  #target = 10;
   /** @type {HTMLElement | null} */
   #top = null;
   /** @type {MutationObserver | null} */
@@ -26,14 +28,15 @@ class MixPackPicker extends HTMLElement {
     document.documentElement.dataset.mixPicker = 'on';
     document.body.dataset.mixPicker = 'on';
 
-    this.#qty3 = Number(this.dataset.qty3) || 3;
-    this.#qty5 = Number(this.dataset.qty5) || 5;
-    this.#price3 = this.dataset.price3 || '49';
-    this.#price5 = this.dataset.price5 || '75';
-    this.#target = mix === '5' ? this.#qty5 : this.#qty3;
+    this.#qty10 = Number(this.dataset.qty10) || 10;
+    this.#qty15 = Number(this.dataset.qty15) || 15;
+    this.#qty30 = Number(this.dataset.qty30) || 30;
+    this.#pct10 = Number(this.dataset.pct10) || 10;
+    this.#pct15 = Number(this.dataset.pct15) || 15;
+    this.#pct30 = Number(this.dataset.pct30) || 20;
+    this.#target = this.#qtyForMix(mix);
 
     if (mix === 'starter') {
-      this.#target = this.#qty3;
       const appCheck = this.querySelector('[data-mix-app]');
       if (appCheck instanceof HTMLInputElement) appCheck.checked = true;
     }
@@ -41,8 +44,28 @@ class MixPackPicker extends HTMLElement {
     this.#mountTop();
     this.#disableCardLinks();
     this.#bind();
-    this.#syncTargetInputs();
     this.#render();
+  }
+
+  /** @param {string} mix */
+  #qtyForMix(mix) {
+    if (mix === '15' || mix === String(this.#qty15)) return this.#qty15;
+    if (mix === '30' || mix === String(this.#qty30)) return this.#qty30;
+    return this.#qty10;
+  }
+
+  #pctForTarget() {
+    if (this.#target === this.#qty30) return this.#pct30;
+    if (this.#target === this.#qty15) return this.#pct15;
+    return this.#pct10;
+  }
+
+  #total() {
+    let sum = 0;
+    this.#selected.forEach((item) => {
+      sum += item.qty;
+    });
+    return sum;
   }
 
   #mountTop() {
@@ -58,7 +81,9 @@ class MixPackPicker extends HTMLElement {
 
   /** @param {number} qty */
   #setTarget(qty) {
-    this.#target = qty === this.#qty5 ? this.#qty5 : this.#qty3;
+    if (qty === this.#qty30) this.#target = this.#qty30;
+    else if (qty === this.#qty15) this.#target = this.#qty15;
+    else this.#target = this.#qty10;
     this.#trimSelection();
     this.#render();
     const url = new URL(window.location.href);
@@ -96,13 +121,6 @@ class MixPackPicker extends HTMLElement {
   }
 
   #bind() {
-    this.#all('[data-mix-target]').forEach((input) => {
-      input.addEventListener('change', () => {
-        if (!(input instanceof HTMLInputElement) || !input.checked) return;
-        this.#setTarget(Number(input.value) || this.#qty3);
-      });
-    });
-
     this.#all('[data-mix-app], [data-mix-app-type]').forEach((input) => {
       input.addEventListener('change', () => this.#render());
     });
@@ -130,15 +148,19 @@ class MixPackPicker extends HTMLElement {
     if (event.target.closest('mix-pack-picker, [data-mix-top]')) return;
     if (event.target.closest('header-component, .header, cart-drawer-component, nav')) return;
 
+    const qtyBtn = event.target.closest('[data-mix-qty]');
     const item = event.target.closest('.product-grid__item[data-variant-id], product-card, product-card-link');
-    if (!item) return;
+    if (!item && !qtyBtn) return;
 
-    const card = item.closest('.product-grid__item[data-variant-id]') || item;
-    const variantId = card.getAttribute('data-variant-id') || card.querySelector('[data-variant-id]')?.getAttribute('data-variant-id');
+    const card = (qtyBtn || item)?.closest('.product-grid__item[data-variant-id]') || item;
+    const variantId =
+      card?.getAttribute('data-variant-id') ||
+      card?.querySelector('[data-variant-id]')?.getAttribute('data-variant-id');
     const row =
-      card.matches?.('.product-grid__item')
+      card?.matches?.('.product-grid__item')
         ? card
-        : card.closest('.product-grid__item') || document.querySelector(`.product-grid__item[data-variant-id="${variantId || ''}"]`);
+        : card?.closest('.product-grid__item') ||
+          document.querySelector(`.product-grid__item[data-variant-id="${variantId || ''}"]`);
 
     if (!row) return;
     if (row.getAttribute('data-available') === 'false') return;
@@ -146,26 +168,33 @@ class MixPackPicker extends HTMLElement {
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    this.#toggle(row);
+
+    if (qtyBtn) {
+      this.#changeQty(row, Number(qtyBtn.getAttribute('data-mix-qty')) || 0);
+    } else {
+      this.#changeQty(row, 1);
+    }
+    this.#render();
   };
 
-  /** @param {Element} item */
-  #toggle(item) {
+  /** @param {Element} item @param {number} delta */
+  #changeQty(item, delta) {
     const id = item.getAttribute('data-variant-id') || '';
     if (!id) return;
-    if (this.#selected.has(id)) this.#deselect(id);
-    else this.#select(item);
-    this.#render();
-  }
-
-  /** @param {Element} item */
-  #select(item) {
-    const id = item.getAttribute('data-variant-id') || '';
-    if (!id || item.getAttribute('data-available') === 'false') return;
-    if (this.#selected.has(id) || this.#selected.size >= this.#target) return;
-    this.#selected.set(id, { id, title: item.getAttribute('data-product-title') || '' });
-    item.classList.add('is-mix-selected');
-    this.#markCard(item);
+    const current = this.#selected.get(id);
+    if (!current) {
+      if (delta <= 0 || this.#total() >= this.#target) return;
+      this.#selected.set(id, { id, title: item.getAttribute('data-product-title') || '', qty: 1 });
+      item.classList.add('is-mix-selected');
+      return;
+    }
+    const next = current.qty + delta;
+    if (delta > 0 && this.#total() >= this.#target) return;
+    if (next <= 0) {
+      this.#deselect(id);
+      return;
+    }
+    current.qty = next;
   }
 
   /** @param {string} id */
@@ -174,46 +203,53 @@ class MixPackPicker extends HTMLElement {
     document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"]`).forEach((item) => {
       item.classList.remove('is-mix-selected');
       item.querySelector('.mix-pick-mark')?.remove();
-    });
-  }
-
-  /** @param {Element} item */
-  #markCard(item) {
-    const host =
-      item.querySelector('.card-gallery') || item.querySelector('.product-card') || item;
-    if (!(host instanceof HTMLElement)) return;
-    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
-    let mark = item.querySelector('.mix-pick-mark');
-    if (!(mark instanceof HTMLElement)) {
-      mark = document.createElement('span');
-      mark.className = 'mix-pick-mark';
-      mark.setAttribute('aria-hidden', 'true');
-      host.append(mark);
-    }
-  }
-
-  #renumberMarks() {
-    let index = 1;
-    this.#selected.forEach((_, id) => {
-      document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"] .mix-pick-mark`).forEach((mark) => {
-        mark.textContent = String(index);
-      });
-      index += 1;
+      item.querySelector('.mix-pick-qty')?.remove();
     });
   }
 
   #trimSelection() {
-    const ids = [...this.#selected.keys()];
-    while (this.#selected.size > this.#target) {
-      const last = ids.pop();
-      if (last) this.#deselect(last);
+    while (this.#total() > this.#target) {
+      const lastId = [...this.#selected.keys()].pop();
+      if (!lastId) break;
+      const item = this.#selected.get(lastId);
+      if (!item) break;
+      item.qty -= 1;
+      if (item.qty <= 0) this.#deselect(lastId);
     }
   }
 
-  #syncTargetInputs() {
-    this.#all('[data-mix-target]').forEach((input) => {
-      if (!(input instanceof HTMLInputElement)) return;
-      input.checked = Number(input.value) === this.#target;
+  #syncSteppers() {
+    const full = this.#total() >= this.#target;
+    this.#selected.forEach((entry, id) => {
+      document.querySelectorAll(`.product-grid__item[data-variant-id="${CSS.escape(id)}"]`).forEach((item) => {
+        const host = item.querySelector('.card-gallery') || item.querySelector('.product-card') || item;
+        if (!(host instanceof HTMLElement)) return;
+        if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+
+        let mark = item.querySelector('.mix-pick-mark');
+        if (!(mark instanceof HTMLElement)) {
+          mark = document.createElement('span');
+          mark.className = 'mix-pick-mark';
+          mark.setAttribute('aria-hidden', 'true');
+          host.append(mark);
+        }
+        mark.textContent = String(entry.qty);
+
+        let stepper = item.querySelector('.mix-pick-qty');
+        if (!(stepper instanceof HTMLElement)) {
+          stepper = document.createElement('div');
+          stepper.className = 'mix-pick-qty';
+          stepper.innerHTML =
+            '<button type="button" class="mix-pick-qty__btn" data-mix-qty="-1" aria-label="Fjern 1">−</button>' +
+            '<span class="mix-pick-qty__val"></span>' +
+            '<button type="button" class="mix-pick-qty__btn" data-mix-qty="1" aria-label="Tilføj 1">+</button>';
+          host.append(stepper);
+        }
+        const val = stepper.querySelector('.mix-pick-qty__val');
+        if (val) val.textContent = String(entry.qty);
+        const plus = stepper.querySelector('[data-mix-qty="1"]');
+        if (plus instanceof HTMLButtonElement) plus.disabled = full;
+      });
     });
   }
 
@@ -226,16 +262,15 @@ class MixPackPicker extends HTMLElement {
   }
 
   #render() {
-    this.#syncTargetInputs();
-    this.#renumberMarks();
-    const count = this.#selected.size;
-    const price = this.#target === this.#qty5 ? this.#price5 : this.#price3;
+    this.#syncSteppers();
+    const count = this.#total();
+    const pct = this.#pctForTarget();
     const ready = count >= this.#target;
     const statusText = ready
-      ? `Rabatten er klar — ${this.#target} for ${price} kr`
+      ? `${pct}% rabat klar`
       : count === 0
-        ? 'Tryk på en scent for at vælge'
-        : `Mangler ${this.#target - count}`;
+        ? 'Tryk på en scent — tryk igen for +1'
+        : `Mangler ${this.#target - count} stk`;
 
     this.#all('[data-mix-count]').forEach((el) => {
       el.textContent = String(count);
@@ -250,9 +285,9 @@ class MixPackPicker extends HTMLElement {
       if (!(submit instanceof HTMLButtonElement)) return;
       submit.disabled = !ready;
       submit.textContent = ready
-        ? `Læg i kurv · ${price} kr`
+        ? `Læg i kurv · −${pct}%`
         : count === 0
-          ? `Vælg ${this.#target} scents`
+          ? `Vælg ${this.#target} stk`
           : `Vælg ${this.#target - count} mere`;
     });
 
@@ -261,14 +296,9 @@ class MixPackPicker extends HTMLElement {
     });
     this.#top?.classList.toggle('is-ready', ready);
 
-    const slots = this.#all('[data-mix-slots]')[0];
-    if (slots) {
-      slots.innerHTML = '';
-      for (let i = 0; i < this.#target; i += 1) {
-        const slot = document.createElement('span');
-        slot.className = `mix-pick__slot${i < count ? ' is-filled' : ''}`;
-        slots.appendChild(slot);
-      }
+    const fill = this.#all('[data-mix-fill]')[0];
+    if (fill instanceof HTMLElement) {
+      fill.style.width = `${Math.min(100, (count / this.#target) * 100)}%`;
     }
 
     const appTypes = this.#all('[data-mix-app-types]')[0];
@@ -278,17 +308,17 @@ class MixPackPicker extends HTMLElement {
     }
 
     document.querySelectorAll('.product-grid__item[data-variant-id]').forEach((item) => {
-      const full = this.#selected.size >= this.#target && !item.classList.contains('is-mix-selected');
-      item.classList.toggle('is-mix-locked', full);
+      const locked = ready && !item.classList.contains('is-mix-selected');
+      item.classList.toggle('is-mix-locked', locked);
     });
   }
 
   async #submit() {
-    if (this.#selected.size < this.#target) return;
+    if (this.#total() < this.#target) return;
     const submit = this.querySelector('[data-mix-submit]');
     if (submit instanceof HTMLButtonElement) submit.disabled = true;
 
-    const items = [...this.#selected.keys()].map((id) => ({ id: Number(id), quantity: 1 }));
+    const items = [...this.#selected.values()].map((item) => ({ id: Number(item.id), quantity: item.qty }));
     const appId = this.#appVariantId();
     if (appId) items.push({ id: Number(appId), quantity: 1 });
 
@@ -318,7 +348,7 @@ class MixPackPicker extends HTMLElement {
       this.dispatchEvent(
         new CartAddEvent(data, 'mix-pack-picker', {
           source: 'mix-pack-picker',
-          itemCount: items.length,
+          itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
           sections: data.sections,
         })
       );

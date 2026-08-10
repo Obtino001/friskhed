@@ -4,10 +4,12 @@
     assign app_alt = settings.cart_upsell_applicator_alt
     assign app_variant = app.selected_or_first_available_variant
     assign app_alt_variant = app_alt.selected_or_first_available_variant
-    assign qty_3 = settings.mix_pack_3_qty | default: 3
-    assign qty_5 = settings.mix_pack_5_qty | default: 5
-    assign price_3 = settings.mix_pack_3_price | default: '49'
-    assign price_5 = settings.mix_pack_5_price | default: '75'
+    assign qty_10 = settings.mix_pack_10_qty | default: 10
+    assign qty_15 = settings.mix_pack_15_qty | default: 15
+    assign qty_30 = settings.mix_pack_30_qty | default: 30
+    assign pct_10 = settings.mix_pack_10_pct | default: 10
+    assign pct_15 = settings.mix_pack_15_pct | default: 15
+    assign pct_30 = settings.mix_pack_30_pct | default: 20
   -%}
 
   <script>
@@ -33,10 +35,12 @@
   <mix-pack-picker
     class="mix-pick"
     hidden
-    data-qty-3="{{ qty_3 }}"
-    data-qty-5="{{ qty_5 }}"
-    data-price-3="{{ price_3 }}"
-    data-price-5="{{ price_5 }}"
+    data-qty-10="{{ qty_10 }}"
+    data-qty-15="{{ qty_15 }}"
+    data-qty-30="{{ qty_30 }}"
+    data-pct-10="{{ pct_10 }}"
+    data-pct-15="{{ pct_15 }}"
+    data-pct-30="{{ pct_30 }}"
     data-app-id="{{ app_variant.id }}"
     data-collection="{{ collection.handle }}"
     data-scent-collection="{{ settings.cart_upsell_scents.handle }}"
@@ -44,33 +48,41 @@
     <div class="mix-pick__panel" data-mix-top>
       <div class="mix-pick__panel-head">
         <h2 class="mix-pick__panel-title">Mix dine favoritter</h2>
-        <p class="mix-pick__panel-sub">Vælg dine scents — rabatten lægges automatisk i kurven</p>
+        <p class="mix-pick__panel-sub">Saml stk — rabatten trækkes automatisk i kurven</p>
       </div>
 
-      <div class="mix-pick__options" role="group" aria-label="Vælg pakkestørrelse">
-        <button type="button" class="mix-pick__option is-active" data-mix-offer="{{ qty_3 }}">
+      <div class="mix-pick__options" role="group" aria-label="Vælg mængderabat">
+        <button type="button" class="mix-pick__option is-active" data-mix-offer="{{ qty_10 }}">
           <span class="mix-pick__option-radio" aria-hidden="true"></span>
           <span class="mix-pick__option-body">
-            <span class="mix-pick__option-name">{{ qty_3 }} scents</span>
-            <span class="mix-pick__option-price">{{ price_3 }} kr</span>
+            <span class="mix-pick__option-name">{{ qty_10 }} stk</span>
+            <span class="mix-pick__option-price">−{{ pct_10 }}%</span>
           </span>
-          <span class="mix-pick__option-save">Spar 11 kr</span>
         </button>
-        <button type="button" class="mix-pick__option" data-mix-offer="{{ qty_5 }}">
+        <button type="button" class="mix-pick__option" data-mix-offer="{{ qty_15 }}">
           <span class="mix-pick__option-radio" aria-hidden="true"></span>
           <span class="mix-pick__option-body">
-            <span class="mix-pick__option-name">{{ qty_5 }} scents</span>
-            <span class="mix-pick__option-price">{{ price_5 }} kr</span>
+            <span class="mix-pick__option-name">{{ qty_15 }} stk</span>
+            <span class="mix-pick__option-price">−{{ pct_15 }}%</span>
           </span>
-          <span class="mix-pick__option-save mix-pick__option-save--best">Spar 25 kr</span>
+        </button>
+        <button type="button" class="mix-pick__option" data-mix-offer="{{ qty_30 }}">
+          <span class="mix-pick__option-radio" aria-hidden="true"></span>
+          <span class="mix-pick__option-body">
+            <span class="mix-pick__option-name">{{ qty_30 }} stk</span>
+            <span class="mix-pick__option-price">−{{ pct_30 }}%</span>
+          </span>
+          <span class="mix-pick__option-save">Bedst værdi</span>
         </button>
       </div>
 
       <div class="mix-pick__progress">
-        <div class="mix-pick__track" data-mix-slots aria-hidden="true"></div>
+        <div class="mix-pick__track" data-mix-slots aria-hidden="true">
+          <span class="mix-pick__fill" data-mix-fill></span>
+        </div>
         <p class="mix-pick__progress-text">
-          <strong><span data-mix-count>0</span> af <span data-mix-target-label>{{ qty_3 }}</span> valgt</strong>
-          <span data-mix-status>Tryk på en scent for at vælge</span>
+          <strong><span data-mix-count>0</span> af <span data-mix-target-label>{{ qty_10 }}</span> stk</strong>
+          <span data-mix-status>Tryk på en scent — tryk igen for +1</span>
         </p>
       </div>
     </div>
@@ -112,7 +124,7 @@
         {% endif %}
 
         <button type="button" class="mix-pick__submit" data-mix-submit disabled>
-          Vælg {{ qty_3 }} scents
+          Vælg {{ qty_10 }} stk
         </button>
       </div>
     </div>
@@ -182,8 +194,8 @@
 
   .mix-pick__options {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
   }
 
   .mix-pick__option {
@@ -266,21 +278,61 @@
   }
 
   .mix-pick__track {
-    display: flex;
-    gap: 5px;
+    display: block;
+    overflow: hidden;
+    height: 6px;
     margin-bottom: 8px;
-  }
-
-  .mix-pick__slot {
-    flex: 1;
-    height: 5px;
     border-radius: 999px;
     background: #ebebeb;
-    transition: background-color 0.2s ease;
   }
 
-  .mix-pick__slot.is-filled {
+  .mix-pick__fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
     background: #13a877;
+    transition: width 0.2s ease;
+  }
+
+  .mix-pick-qty {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgb(18 18 18 / 0.14);
+  }
+
+  .mix-pick-qty__btn {
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 50%;
+    background: #121212;
+    color: #fff;
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .mix-pick-qty__btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .mix-pick-qty__val {
+    min-width: 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-align: center;
   }
 
   .mix-pick__progress-text {
@@ -491,7 +543,7 @@
     }
 
     .mix-pick__options {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 12px;
     }
 

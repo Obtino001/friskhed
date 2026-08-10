@@ -6,7 +6,7 @@
 
 **Bottom line from Obtino:** new theme looks better; old theme sold better because trust and message were stripped. Fix = restore trust layer, then Shoplift A/B.
 
-**Audit bottom line:** parity items 1–3 and most of 4–10 are in the theme. Conversion still depends on **admin** (shipping 149, automatic 3/5-pack discounts, menthol metafields, wallet checkout, Shoplift test).
+**Audit bottom line:** parity items 1–3 and most of 4–10 are in the theme. Conversion still depends on **admin** (shipping 149, automatic 10/15/30 volume % discounts, menthol metafields, wallet checkout, Shoplift test).
 
 ---
 
@@ -92,7 +92,7 @@ Trust bar + `dispatch_cutoff_hour: 15`. Honest 1–3 days still in buy box.
 
 | Play | Theme | Admin still required |
 |---|---|---|
-| **1. Mix 3 ≈ 49 / 5 ≈ 75** | Homepage cards, PDP banner → `?mix=3`, collection picker, cart nudge | Automatic discounts: 3 from `aroma-kugler` = 49 kr; 5 = 75 kr. Applicators must **not** be in that collection. |
+| **1. Mix volume %** | Homepage cards, PDP banner → `?mix=10`, collection picker with qty, cart nudge | Automatic discounts on `aroma-kugler` only: **10 stk = 10%**, **15 stk = 15%**, **30 stk = 20%**. Applicators must **not** be in that collection. Client rejected 3≈49 / 5≈75 as too cheap. |
 | **2. Free shipping ~149** | Progress bar, USPs, sales points, mix copy all 149 | Shopify shipping rates must be free from 149 (live site has shown 450/499). |
 | **3. Starter kit** | Card + mix `?mix=starter` + applicator checkbox | Optional combo discount / kit SKU if ads need a product. |
 

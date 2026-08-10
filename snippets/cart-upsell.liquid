@@ -9,18 +9,18 @@
   assign viewing_applicator = false
   assign applicator_in_cart = false
   assign upsell_product = nil
-  assign qty_3 = settings.mix_pack_3_qty | default: 3
-  assign qty_5 = settings.mix_pack_5_qty | default: 5
-  assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
-  assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
+  assign qty_10 = settings.mix_pack_10_qty | default: 10
+  assign qty_15 = settings.mix_pack_15_qty | default: 15
+  assign qty_30 = settings.mix_pack_30_qty | default: 30
+  assign pct_10 = settings.mix_pack_10_pct | default: 10
+  assign pct_15 = settings.mix_pack_15_pct | default: 15
+  assign pct_30 = settings.mix_pack_30_pct | default: 20
   assign upsell_heading = 'Gør ordren komplet'
 -%}
 {%- capture applicator_ids -%}{% render 'applicator-ids' %}{%- endcapture -%}
 {%- capture mix_pack_qty -%}{% render 'mix-pack-count' %}{%- endcapture -%}
 {%- liquid
   assign mix_pack_qty = mix_pack_qty | plus: 0
-  assign price_3_label = price_3 | money_without_trailing_zeros
-  assign price_5_label = price_5 | money_without_trailing_zeros
   assign skip_token = ':' | append: skip_product_id | append: ':'
   if skip_product_id != blank and applicator_ids contains skip_token
     assign viewing_applicator = true
@@ -32,10 +32,13 @@
     assign applicator_in_cart = true
   endif
 
-  if settings.mix_pack_enable and mix_pack_qty > 0 and mix_pack_qty < qty_3
-    assign upsell_heading = 'Mix ' | append: qty_3 | append: ' stk for ' | append: price_3_label
-  elsif settings.mix_pack_enable and mix_pack_qty >= qty_3 and mix_pack_qty < qty_5
-    assign upsell_heading = 'Mix ' | append: qty_5 | append: ' stk for ' | append: price_5_label
+  if settings.mix_pack_enable and mix_pack_qty > 0 and mix_pack_qty < qty_10
+    assign need_10 = qty_10 | minus: mix_pack_qty
+    assign upsell_heading = 'Tilføj ' | append: need_10 | append: ' mere og få ' | append: pct_10 | append: '% rabat'
+  elsif settings.mix_pack_enable and mix_pack_qty >= qty_10 and mix_pack_qty < qty_15
+    assign upsell_heading = pct_10 | append: '% aktiv · gå efter ' | append: pct_15 | append: '%'
+  elsif settings.mix_pack_enable and mix_pack_qty >= qty_15 and mix_pack_qty < qty_30
+    assign upsell_heading = pct_15 | append: '% aktiv · gå efter ' | append: pct_30 | append: '%'
   endif
 
   unless viewing_applicator or applicator_in_cart

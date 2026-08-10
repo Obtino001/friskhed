@@ -218,35 +218,47 @@
         "id": "mix_pack_enable",
         "label": "Show mix-pack offers",
         "default": true,
-        "info": "Theme shows 3/5-pack prices. Discounts only apply after you create automatic discounts in Shopify admin."
+        "info": "Theme shows volume % tiers. Discounts only apply after matching automatic discounts exist in Shopify admin."
       },
       {
         "type": "number",
-        "id": "mix_pack_3_qty",
-        "label": "3-pack quantity",
-        "default": 3
-      },
-      {
-        "type": "text",
-        "id": "mix_pack_3_price",
-        "label": "3-pack total (DKK)",
-        "default": "49"
+        "id": "mix_pack_10_qty",
+        "label": "Tier 1 quantity",
+        "default": 10
       },
       {
         "type": "number",
-        "id": "mix_pack_5_qty",
-        "label": "5-pack quantity",
-        "default": 5
+        "id": "mix_pack_10_pct",
+        "label": "Tier 1 discount %",
+        "default": 10
       },
       {
-        "type": "text",
-        "id": "mix_pack_5_price",
-        "label": "5-pack total (DKK)",
-        "default": "75"
+        "type": "number",
+        "id": "mix_pack_15_qty",
+        "label": "Tier 2 quantity",
+        "default": 15
+      },
+      {
+        "type": "number",
+        "id": "mix_pack_15_pct",
+        "label": "Tier 2 discount %",
+        "default": 15
+      },
+      {
+        "type": "number",
+        "id": "mix_pack_30_qty",
+        "label": "Tier 3 quantity",
+        "default": 30
+      },
+      {
+        "type": "number",
+        "id": "mix_pack_30_pct",
+        "label": "Tier 3 discount %",
+        "default": 20
       },
       {
         "type": "paragraph",
-        "content": "Shopify admin still required: (1) Settings → Shipping: free from 149 DKK not 450. (2) Discounts → Automatic: Buy X get Y — 3 from aroma-kugler = 49 DKK, 5 = 75 DKK, plus starter kit aroma+applicator. (3) Metafield custom.menthol_strength 1–5. (4) Automatic 10% for welcome popup. (5) Preview unpublished theme before live."
+        "content": "Shopify admin still required: (1) Settings → Shipping: free from 149 DKK. (2) Discounts → Automatic on aroma-kugler only: 10 stk = 10%, 15 stk = 15%, 30 stk = 20%. Applicators must not be in that collection. (3) Metafield custom.menthol_strength 1–5. (4) Automatic 10% for welcome popup. (5) Preview unpublished theme before live."
       },
       {
         "type": "header",

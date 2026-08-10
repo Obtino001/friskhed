@@ -2,29 +2,34 @@
   {%- capture mix_pack_qty -%}{% render 'mix-pack-count' %}{%- endcapture -%}
   {%- liquid
     assign mix_pack_qty = mix_pack_qty | plus: 0
-    assign qty_3 = settings.mix_pack_3_qty | default: 3
-    assign qty_5 = settings.mix_pack_5_qty | default: 5
-    assign price_3 = settings.mix_pack_3_price | default: '49' | times: 100
-    assign price_5 = settings.mix_pack_5_price | default: '75' | times: 100
+    assign qty_10 = settings.mix_pack_10_qty | default: 10
+    assign qty_15 = settings.mix_pack_15_qty | default: 15
+    assign qty_30 = settings.mix_pack_30_qty | default: 30
+    assign pct_10 = settings.mix_pack_10_pct | default: 10
+    assign pct_15 = settings.mix_pack_15_pct | default: 15
+    assign pct_30 = settings.mix_pack_30_pct | default: 20
     assign scent_url = settings.cart_upsell_scents.url | default: routes.all_products_collection_url
-    assign need_3 = qty_3 | minus: mix_pack_qty
-    assign need_5 = qty_5 | minus: mix_pack_qty
+    assign need_10 = qty_10 | minus: mix_pack_qty
+    assign need_15 = qty_15 | minus: mix_pack_qty
+    assign need_30 = qty_30 | minus: mix_pack_qty
   -%}
   {%- capture message -%}
-    {%- if mix_pack_qty > 0 and mix_pack_qty < qty_3 -%}
-      Tilføj {{ need_3 }} mere og betal kun {{ price_3 | money_without_trailing_zeros }} for {{ qty_3 }}-pack
-    {%- elsif mix_pack_qty >= qty_3 and mix_pack_qty < qty_5 -%}
-      {{ qty_3 }}-pack aktiv · tilføj {{ need_5 }} mere til {{ qty_5 }}-pack {{ price_5 | money_without_trailing_zeros }}
-    {%- elsif mix_pack_qty >= qty_5 -%}
-      {{ qty_5 }}-pack rabat er aktiv
+    {%- if mix_pack_qty > 0 and mix_pack_qty < qty_10 -%}
+      Tilføj {{ need_10 }} mere og få {{ pct_10 }}% rabat
+    {%- elsif mix_pack_qty >= qty_10 and mix_pack_qty < qty_15 -%}
+      {{ pct_10 }}% aktiv · tilføj {{ need_15 }} mere til {{ pct_15 }}%
+    {%- elsif mix_pack_qty >= qty_15 and mix_pack_qty < qty_30 -%}
+      {{ pct_15 }}% aktiv · tilføj {{ need_30 }} mere til {{ pct_30 }}%
+    {%- elsif mix_pack_qty >= qty_30 -%}
+      {{ pct_30 }}% mængderabat er aktiv
     {%- endif -%}
   {%- endcapture -%}
 
   {%- if message != blank -%}
     <div class="mix-pack-nudge">
       <p class="mix-pack-nudge__text">{{ message }}</p>
-      {%- if mix_pack_qty < qty_5 -%}
-        <a class="mix-pack-nudge__link" href="{{ scent_url }}">Mix dine favoritter</a>
+      {%- if mix_pack_qty < qty_30 -%}
+        <a class="mix-pack-nudge__link" href="{{ scent_url }}?mix=10">Mix dine favoritter</a>
       {%- endif -%}
     </div>
   {%- endif -%}
