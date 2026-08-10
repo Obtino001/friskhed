@@ -6,9 +6,9 @@ class MixPackPicker extends HTMLElement {
   #qty10 = 10;
   #qty15 = 15;
   #qty30 = 30;
-  #pct10 = 10;
-  #pct15 = 15;
-  #pct30 = 20;
+  #pct10 = 5;
+  #pct15 = 10;
+  #pct30 = 15;
   #target = 10;
   /** @type {HTMLElement | null} */
   #top = null;
@@ -31,9 +31,9 @@ class MixPackPicker extends HTMLElement {
     this.#qty10 = Number(this.dataset.qty10) || 10;
     this.#qty15 = Number(this.dataset.qty15) || 15;
     this.#qty30 = Number(this.dataset.qty30) || 30;
-    this.#pct10 = Number(this.dataset.pct10) || 10;
-    this.#pct15 = Number(this.dataset.pct15) || 15;
-    this.#pct30 = Number(this.dataset.pct30) || 20;
+    this.#pct10 = Number(this.dataset.pct10) || 5;
+    this.#pct15 = Number(this.dataset.pct15) || 10;
+    this.#pct30 = Number(this.dataset.pct30) || 15;
     this.#target = this.#qtyForMix(mix);
 
     if (mix === 'starter') {

@@ -92,7 +92,7 @@ Trust bar + `dispatch_cutoff_hour: 15`. Honest 1–3 days still in buy box.
 
 | Play | Theme | Admin still required |
 |---|---|---|
-| **1. Mix volume %** | Homepage cards, PDP banner → `?mix=10`, collection picker with qty, cart nudge | Automatic discounts on `aroma-kugler` only: **10 stk = 10%**, **15 stk = 15%**, **30 stk = 20%**. Applicators must **not** be in that collection. Client rejected 3≈49 / 5≈75 as too cheap. |
+| **1. Mix volume %** | Homepage cards, PDP banner → `?mix=10`, collection picker with qty, cart nudge | Automatic discounts on `aroma-kugler` only: **10 stk = 5%**, **15 stk = 10%**, **30 stk = 15%**. Applicators must **not** be in that collection. Client lowered % after 10/15/20 felt high. |
 | **2. Free shipping ~149** | Progress bar, USPs, sales points, mix copy all 149 | Shopify shipping rates must be free from 149 (live site has shown 450/499). |
 | **3. Starter kit** | Card + mix `?mix=starter` + applicator checkbox | Optional combo discount / kit SKU if ads need a product. |
 

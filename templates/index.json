@@ -138,9 +138,9 @@
           "settings": {
             "badge": "Mest populær",
             "title": "10 stk",
-            "price": "−10%",
+            "price": "−5%",
             "compare_at": "Mængderabat",
-            "text": "Køb 10 aroma-kugler og få 10% rabat. Rabatten trækkes automatisk i kurven.",
+            "text": "Køb 10 aroma-kugler og få 5% rabat. Rabatten trækkes automatisk i kurven.",
             "button_label": "Vælg 10 stk",
             "button_link": "/collections/aroma-kugler?mix=10",
             "featured": true
@@ -151,9 +151,9 @@
           "settings": {
             "badge": "",
             "title": "15 stk",
-            "price": "−15%",
+            "price": "−10%",
             "compare_at": "Mængderabat",
-            "text": "Køb 15 aroma-kugler og få 15% rabat.",
+            "text": "Køb 15 aroma-kugler og få 10% rabat.",
             "button_label": "Vælg 15 stk",
             "button_link": "/collections/aroma-kugler?mix=15",
             "featured": false
@@ -164,9 +164,9 @@
           "settings": {
             "badge": "Bedst værdi",
             "title": "30 stk",
-            "price": "−20%",
+            "price": "−15%",
             "compare_at": "Mængderabat",
-            "text": "Køb 30 aroma-kugler og få 20% rabat.",
+            "text": "Køb 30 aroma-kugler og få 15% rabat.",
             "button_label": "Vælg 30 stk",
             "button_link": "/collections/aroma-kugler?mix=30",
             "featured": false

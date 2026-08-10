@@ -230,7 +230,7 @@
         "type": "number",
         "id": "mix_pack_10_pct",
         "label": "Tier 1 discount %",
-        "default": 10
+        "default": 5
       },
       {
         "type": "number",
@@ -242,7 +242,7 @@
         "type": "number",
         "id": "mix_pack_15_pct",
         "label": "Tier 2 discount %",
-        "default": 15
+        "default": 10
       },
       {
         "type": "number",
@@ -254,11 +254,11 @@
         "type": "number",
         "id": "mix_pack_30_pct",
         "label": "Tier 3 discount %",
-        "default": 20
+        "default": 15
       },
       {
         "type": "paragraph",
-        "content": "Shopify admin still required: (1) Settings → Shipping: free from 149 DKK. (2) Discounts → Automatic on aroma-kugler only: 10 stk = 10%, 15 stk = 15%, 30 stk = 20%. Applicators must not be in that collection. (3) Metafield custom.menthol_strength 1–5. (4) Automatic 10% for welcome popup. (5) Preview unpublished theme before live."
+        "content": "Shopify admin still required: (1) Settings → Shipping: free from 149 DKK. (2) Discounts → Automatic on aroma-kugler only: 10 stk = 5%, 15 stk = 10%, 30 stk = 15%. Applicators must not be in that collection. (3) Metafield custom.menthol_strength 1–5. (4) Automatic 10% for welcome popup. (5) Preview unpublished theme before live."
       },
       {
         "type": "header",

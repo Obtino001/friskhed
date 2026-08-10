@@ -5,9 +5,9 @@
     assign qty_10 = settings.mix_pack_10_qty | default: 10
     assign qty_15 = settings.mix_pack_15_qty | default: 15
     assign qty_30 = settings.mix_pack_30_qty | default: 30
-    assign pct_10 = settings.mix_pack_10_pct | default: 10
-    assign pct_15 = settings.mix_pack_15_pct | default: 15
-    assign pct_30 = settings.mix_pack_30_pct | default: 20
+    assign pct_10 = settings.mix_pack_10_pct | default: 5
+    assign pct_15 = settings.mix_pack_15_pct | default: 10
+    assign pct_30 = settings.mix_pack_30_pct | default: 15
     assign scent_url = settings.cart_upsell_scents.url | default: routes.all_products_collection_url
     assign need_10 = qty_10 | minus: mix_pack_qty
     assign need_15 = qty_15 | minus: mix_pack_qty
